@@ -1,7 +1,6 @@
 ﻿#include "SceneManager.h"
 #include "TitleScene.h"
 #include "InGameScene.h"
-#include "CoffeeBreakScene.h"
 #include "ResultScene.h"
 
 SceneManager::SceneManager()
@@ -56,8 +55,6 @@ SceneBase* SceneManager::CreateScene(eSceneType new_scene_type)
 	case eSceneType::eInGame:
 	case eSceneType::eRestart:
 		return dynamic_cast<SceneBase*>(new InGameScene());
-	case eSceneType::eCoffeeBreak:
-		return dynamic_cast<SceneBase*>(new CoffeeBreakScene());
 	case eSceneType::eResult:
 		return dynamic_cast<SceneBase*>(new ResultScene());
 	default:

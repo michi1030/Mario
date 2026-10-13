@@ -135,6 +135,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="source\Actor\Actor.cpp" />
+    <ClCompile Include="source\Actor\Enemy.cpp" />
     <ClCompile Include="source\Actor\Mario.cpp" />
     <ClCompile Include="source\Appmain.cpp" />
     <ClCompile Include="source\Input\InputManager.cpp" />
@@ -146,6 +147,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\Actor\Actor.h" />
+    <ClInclude Include="source\Actor\Enemy.h" />
     <ClInclude Include="source\Actor\Mario.h" />
     <ClInclude Include="source\Input\InputManager.h" />
     <ClInclude Include="source\Scene\InGamaScene.h" />

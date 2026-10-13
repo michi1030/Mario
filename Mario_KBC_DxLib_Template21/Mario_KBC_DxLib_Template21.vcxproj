@@ -137,10 +137,24 @@
     <ClCompile Include="Appmain.cpp" />
     <ClCompile Include="source\Actor\Actor.cpp" />
     <ClCompile Include="source\Actor\Mario.cpp" />
+    <ClCompile Include="source\Input\InputManager.cpp" />
+    <ClCompile Include="source\Scene\InGameScene.cpp" />
+    <ClCompile Include="source\Scene\Result.cpp" />
+    <ClCompile Include="source\Scene\SceneManager.cpp" />
+    <ClCompile Include="source\Scene\StockScene.cpp" />
+    <ClCompile Include="source\Scene\Title.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\Actor\Actor.h" />
     <ClInclude Include="source\Actor\Mario.h" />
+    <ClInclude Include="source\Input\InputManager.h" />
+    <ClInclude Include="source\Scene\InGamaeScene.h" />
+    <ClInclude Include="source\Scene\Result.h" />
+    <ClInclude Include="source\Scene\SceneBase.h" />
+    <ClInclude Include="source\Scene\SceneManager.h" />
+    <ClInclude Include="source\Scene\SceneType.h" />
+    <ClInclude Include="source\Scene\Stock.h" />
+    <ClInclude Include="source\Scene\Title.h" />
     <ClInclude Include="source\Utility\Math\MathUtils.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

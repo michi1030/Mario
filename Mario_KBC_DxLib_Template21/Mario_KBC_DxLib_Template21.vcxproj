@@ -135,9 +135,10 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="source\Actor\Actor.cpp" />
-    <ClCompile Include="source\Actor\Enemy.cpp" />
+    <ClCompile Include="source\Actor\enemy\Enemy.cpp" />
     <ClCompile Include="source\Actor\Mario.cpp" />
     <ClCompile Include="source\Appmain.cpp" />
+    <ClCompile Include="source\File\AssetContainer.cpp" />
     <ClCompile Include="source\Input\InputManager.cpp" />
     <ClCompile Include="source\Scene\InGameScene.cpp" />
     <ClCompile Include="source\Scene\Result.cpp" />
@@ -147,8 +148,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\Actor\Actor.h" />
-    <ClInclude Include="source\Actor\Enemy.h" />
+    <ClInclude Include="source\Actor\enemy\Enemy.h" />
     <ClInclude Include="source\Actor\Mario.h" />
+    <ClInclude Include="source\File\AssetContainer.h" />
     <ClInclude Include="source\Input\InputManager.h" />
     <ClInclude Include="source\Scene\InGamaScene.h" />
     <ClInclude Include="source\Scene\Result.h" />

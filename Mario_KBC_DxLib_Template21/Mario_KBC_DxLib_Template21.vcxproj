@@ -139,6 +139,8 @@
     <ClCompile Include="source\Actor\Mario.cpp" />
     <ClCompile Include="source\Appmain.cpp" />
     <ClCompile Include="source\File\AssetContainer.cpp" />
+    <ClCompile Include="source\File\Sprite.cpp" />
+    <ClCompile Include="source\File\StageData.cpp" />
     <ClCompile Include="source\Input\InputManager.cpp" />
     <ClCompile Include="source\Scene\InGameScene.cpp" />
     <ClCompile Include="source\Scene\Result.cpp" />
@@ -151,6 +153,8 @@
     <ClInclude Include="source\Actor\enemy\Enemy.h" />
     <ClInclude Include="source\Actor\Mario.h" />
     <ClInclude Include="source\File\AssetContainer.h" />
+    <ClInclude Include="source\File\Sprite.h" />
+    <ClInclude Include="source\File\StageData.h" />
     <ClInclude Include="source\Input\InputManager.h" />
     <ClInclude Include="source\Scene\InGamaScene.h" />
     <ClInclude Include="source\Scene\Result.h" />

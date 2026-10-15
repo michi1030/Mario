@@ -15,7 +15,7 @@ enum class eActorTag : unsigned char
 	ePlayer,
 	eEnemy,
 	eWall,
-	eFood,
+	eItem,
 };
 
 class Actor

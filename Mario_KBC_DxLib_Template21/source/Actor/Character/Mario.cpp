@@ -1,6 +1,7 @@
 #include "Mario.h"
 #include "../../Input/InputManager.h"
 #include "../../File/AssetContainer.h"
+#include <DxLib.h>
 
 Mario::Mario()
 	: Character()
@@ -20,11 +21,13 @@ void Mario::Initialize()
 	AssetContainer* container = AssetContainer::Get();
 	state = tibi;
 	speed = 120.0f;
+	jump = 0;
 	radius = 10.0f;
 }
 
 void Mario::Update(float delta_second)
 {
+	InputCheck();
 	switch (state)
 	{
 	case tibi:
@@ -67,6 +70,22 @@ void Mario::OnHitCollisionEnter(Actor* actor)
 eActorTag Mario::GetActorTag() const
 {
 	return eActorTag::ePlayer;
+}
+
+void Mario::InputCheck()
+{
+	if (InputManager::GetButtonState(XINPUT_BUTTON_DPAD_LEFT) == eInputState::ePressed) 
+	{
+		velocity = -1;
+	}
+	else if (InputManager::GetButtonState(XINPUT_BUTTON_DPAD_RIGHT) == eInputState::ePressed)
+	{
+		velocity = 1;
+	}
+	if (InputManager::GetButtonState(XINPUT_BUTTON_B) == eInputState::ePressed)
+	{
+		jump = 5;
+	}
 }
 
 void Mario::Tibi()

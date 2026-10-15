@@ -16,6 +16,7 @@ private:
 	int animation_num;
 	eState state;
 	int level;
+	int jump;
 
 public:
 	Mario();
@@ -31,6 +32,7 @@ public:
 	eActorTag GetActorTag() const override;
 
 private:
+	void InputCheck();
 	void Tibi();
 	void Deka();
 	void Fire();

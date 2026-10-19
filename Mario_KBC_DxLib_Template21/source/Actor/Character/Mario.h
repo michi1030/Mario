@@ -17,6 +17,7 @@ private:
 	eState state;
 	int level;
 	int jump;
+	bool star_mode;
 
 public:
 	Mario();

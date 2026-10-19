@@ -3,6 +3,8 @@
 #include "../../File/AssetContainer.h"
 #include <DxLib.h>
 
+#define D_GRAVITY 1500.0f
+
 Mario::Mario()
 	: Character()
 	, animation_time()
@@ -20,9 +22,11 @@ void Mario::Initialize()
 {
 	AssetContainer* container = AssetContainer::Get();
 	state = tibi;
-	speed = 120.0f;
-	jump = 0;
+	speed = 10.0f;
+	jump = 5;
 	radius = 10.0f;
+	star_mode = false;
+	
 }
 
 void Mario::Update(float delta_second)
@@ -42,6 +46,9 @@ void Mario::Update(float delta_second)
 	default:
 		break;
 	}
+
+	//èdóÕ
+	velocity.y += D_GRAVITY * delta_second;
 }
 
 void Mario::Finalize()

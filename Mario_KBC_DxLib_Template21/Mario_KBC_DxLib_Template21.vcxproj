@@ -170,7 +170,7 @@
     <ClInclude Include="source\File\Sprite.h" />
     <ClInclude Include="source\File\StageData.h" />
     <ClInclude Include="source\Input\InputManager.h" />
-    <ClInclude Include="source\Scene\InGamaScene.h" />
+    <ClInclude Include="source\Scene\InGameScene.h" />
     <ClInclude Include="source\Scene\Result.h" />
     <ClInclude Include="source\Scene\SceneBase.h" />
     <ClInclude Include="source\Scene\SceneManager.h" />

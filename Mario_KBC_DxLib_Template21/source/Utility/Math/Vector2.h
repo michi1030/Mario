@@ -1,5 +1,8 @@
 #pragma once
 
+/// <summary>
+/// 2次元ベクトルクラス
+/// </summary>
 class Vector2 final
 {
 public:

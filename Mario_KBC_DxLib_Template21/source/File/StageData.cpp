@@ -1,5 +1,6 @@
 #include "StageData.h"
 
+//Ã“Iƒƒ“ƒo•Ï”‚Ì’è‹`
 StageData* StageData::instance = nullptr;
 const float StageData::CHIP_SIZE = 24.0f;
 const float StageData::STAGE_OFFSET_X = 0.0f;

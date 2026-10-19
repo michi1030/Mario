@@ -75,10 +75,10 @@
     <ClCompile Include="source\Actor\Character\Character.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="source\Scene\TitleScene.cpp">
+    <ClCompile Include="source\Actor\Enemy.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="source\Scene\ResultScene.cpp">
+    <ClCompile Include="source\File\AssetContainer.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
@@ -116,12 +116,17 @@
     <ClInclude Include="source\Utility\Math\Vector2.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+<<<<<<< HEAD
     <ClInclude Include="source\Actor\enemy\Enemy.h">
+=======
+    <ClInclude Include="source\Actor\Enemy.h">
+>>>>>>> 5566dca2d7f3ffcc04100060214d83eae169f32a
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="source\File\AssetContainer.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+<<<<<<< HEAD
     <ClInclude Include="source\File\StageData.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
@@ -152,17 +157,7 @@
     <ClInclude Include="source\Actor\Character\Character.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="source\Scene\TitleScene.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="source\Scene\StockScene.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="source\Scene\ResultScene.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="source\Scene\InGameScene.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
+=======
+>>>>>>> 5566dca2d7f3ffcc04100060214d83eae169f32a
   </ItemGroup>
 </Project>

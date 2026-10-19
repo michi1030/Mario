@@ -37,5 +37,6 @@ private:
 	void Tibi();
 	void Deka();
 	void Fire();
+	bool isStar();
 
 };

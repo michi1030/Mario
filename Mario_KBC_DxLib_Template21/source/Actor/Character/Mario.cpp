@@ -109,3 +109,8 @@ void Mario::Fire()
 {
 
 }
+
+bool Mario::isStar()
+{
+	return star_mode = false;
+}

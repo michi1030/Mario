@@ -139,7 +139,6 @@
     <ClCompile Include="source\Actor\Character\Enemy\kuribo-.cpp" />
     <ClCompile Include="source\Actor\Character\Enemy\nokonoko.cpp" />
     <ClCompile Include="source\Actor\Character\Mario.cpp" />
-    <ClCompile Include="source\Actor\enemy\Enemy.cpp" />
     <ClCompile Include="source\Actor\Item\1up.cpp" />
     <ClCompile Include="source\Actor\Item\fire.cpp" />
     <ClCompile Include="source\Actor\Item\kinoko.cpp" />
@@ -161,7 +160,6 @@
     <ClInclude Include="source\Actor\Character\Enemy\kuribo-.h" />
     <ClInclude Include="source\Actor\Character\Enemy\nokonoko.h" />
     <ClInclude Include="source\Actor\Character\Mario.h" />
-    <ClInclude Include="source\Actor\enemy\Enemy.h" />
     <ClInclude Include="source\Actor\Item\1up.h" />
     <ClInclude Include="source\Actor\Item\fire.h" />
     <ClInclude Include="source\Actor\Item\kinoko.h" />

@@ -17,6 +17,7 @@ private:
 	eState state;
 	int level;
 	int jump;
+	bool star_mode;
 
 public:
 	Mario();
@@ -36,5 +37,6 @@ private:
 	void Tibi();
 	void Deka();
 	void Fire();
+	bool isStar();
 
 };

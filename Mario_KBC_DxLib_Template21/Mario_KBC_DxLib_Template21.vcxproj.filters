@@ -36,9 +36,6 @@
     <ClCompile Include="source\Appmain.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="source\Actor\enemy\Enemy.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="source\File\AssetContainer.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
@@ -51,16 +48,16 @@
     <ClCompile Include="source\File\Sprite.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="source\Actor\Item\kinoko.cpp">
+    <ClCompile Include="source\Actor\Item\Mushroom.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="source\Actor\Item\1up.cpp">
+    <ClCompile Include="source\Actor\Item\OneUpMushroom.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="source\Actor\Item\star.cpp">
+    <ClCompile Include="source\Actor\Item\SuperStar.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="source\Actor\Item\fire.cpp">
+    <ClCompile Include="source\Actor\Item\FireFlower.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="source\Actor\Character\Mario.cpp">
@@ -107,9 +104,6 @@
     <ClInclude Include="source\Utility\Math\Vector2.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="source\Actor\enemy\Enemy.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="source\File\AssetContainer.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
@@ -119,16 +113,16 @@
     <ClInclude Include="source\File\Sprite.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="source\Actor\Item\kinoko.h">
+    <ClInclude Include="source\Actor\Item\Mushroom.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="source\Actor\Item\1up.h">
+    <ClInclude Include="source\Actor\Item\OneUpMushroom.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="source\Actor\Item\star.h">
+    <ClInclude Include="source\Actor\Item\SuperStar.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="source\Actor\Item\fire.h">
+    <ClInclude Include="source\Actor\Item\FireFlower.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="source\Actor\Character\Mario.h">

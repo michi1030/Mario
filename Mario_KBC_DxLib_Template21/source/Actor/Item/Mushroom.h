@@ -1,43 +1,33 @@
 #pragma once
-
 #include "DxLib.h"
-
-// キノコの状態
-enum MushroomState {
-    STATE_EMERGING, // 出現中
-    STATE_MOVING    // 移動中
-};
 
 class Mushroom {
 private:
-    float x, y;             // 位置
-    float vx, vy;           // 速度
-    int width, height;      // サイズ
-    int state;              // 状態
-    float startY;           // 出現開始のY座標
-    bool active;            // 存在フラグ
-    int imageHandle;        // 画像ハンドル
+    // 外部から直接書き換えられたくない変数はすべて private
+    float x;
+    float y;
+    float vx;
+    float vy;
+    int width;
+    int height;
+    int state;          // 0: 出現中, 1: 移動中
+    float startY;
+    bool active;        // 画面に存在するかどうか
+    int imageHandle;
 
 public:
     Mushroom();
-    ~Mushroom();
 
-    // 初期化（出現させる位置と画像ハンドルを渡す）
-    void Spawn(float startX, float startY, int handle);
-
-    // 更新処理（位置の計算）
+    // 操作・更新・描画用関数
+    void Spawn(float startX, float startYPos, int handle);
     void Update(float groundY);
+    void Draw();
+    void Deactivate(); // 安全に非アクティブ（消滅）にする関数
 
-    // 描画処理
-    void Draw() const;
-
-    // ゲッター（プレイヤーとの当たり判定などで使用）
-    bool IsActive() const { return active; }
-    float GetX() const { return x; }
-    float GetY() const { return y; }
-    int GetWidth() const { return width; }
-    int GetHeight() const { return height; }
-
-    // 非アクティブ化（プレイヤーが取った時用）
-    void Deactivate() { active = false; }
+    // 値を取得するための関数（ゲッター）
+    bool IsActive();
+    float GetX();
+    float GetY();
+    int GetWidth();
+    int GetHeight();
 };

@@ -16,6 +16,11 @@ private:
 	int animation_num;
 	eState state;
 	int level;
+	float jump;
+	float jumpBoost;
+	bool star_mode;
+	bool dash;
+	bool IsGround;
 
 public:
 	Mario();
@@ -31,8 +36,10 @@ public:
 	eActorTag GetActorTag() const override;
 
 private:
+	void InputCheck(float delta_second);
 	void Tibi();
 	void Deka();
 	void Fire();
+	bool isStar();
 
 };

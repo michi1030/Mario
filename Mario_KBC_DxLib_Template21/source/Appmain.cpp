@@ -1,40 +1,43 @@
-#include"DxLib.h"
+ï»¿#include"DxLib.h"
 
 #include"Input/InputManager.h"
 
-//#include"Scene/SceneManager.h"
+#include"Scene/SceneManager.h"
 
 int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
 {
-	//ƒEƒCƒ“ƒhƒEƒ‚[ƒh‚Å‹N“®
+	//ã‚¦ã‚¤ãƒ³ãƒ‰ã‚¦ãƒ¢ãƒ¼ãƒ‰ã§èµ·å‹•
 	ChangeWindowMode(TRUE);
-	//‰æ–ÊƒTƒCƒY‚Ìİ’èiX²MAXF1280@Y²MAXF720j
+	//ç”»é¢ã‚µã‚¤ã‚ºã®è¨­å®šï¼ˆXè»¸MAXï¼š1280ã€€Yè»¸MAXï¼š720ï¼‰
 	SetGraphMode(1024, 768, 32);
-	//Dxƒ‰ƒCƒuƒ‰ƒŠ‚Ì‰Šú‰»ˆ—
+	//Dxãƒ©ã‚¤ãƒ–ãƒ©ãƒªã®åˆæœŸåŒ–å‡¦ç†
 	if (DxLib_Init() == -1)
 	{
 		return -1;
 	}
-	//— ‰æ–Ê‚©‚çƒEƒCƒ“ƒhƒE‚ğ•\¦‚·‚é
+	//è£ç”»é¢ã‹ã‚‰ã‚¦ã‚¤ãƒ³ãƒ‰ã‚¦ã‚’è¡¨ç¤ºã™ã‚‹
 	SetDrawScreen(DX_SCREEN_BACK);
+
+	float delta_second(0.0f);
+	SceneManager scenemanager;
 
 	while (ProcessMessage() != -1)
 	{
 
 		InputManager::Update();
 
-		//‰æ–Ê‚Ì‰Šú‰»
+		scenemanager.Update(delta_second);
+
+		//ç”»é¢ã®åˆæœŸåŒ–
 		ClearDrawScreen();
 
-		//‚±‚Ì‰º‚Éˆ—‚ğ‘‚¢‚Ä‚¢‚­
+		//ã“ã®ä¸‹ã«å‡¦ç†ã‚’æ›¸ã„ã¦ã„ã
 		
-		
-		
-		
+		scenemanager.Draw();
 		
 		 
 		
-		//— ‰æ–Ê‚ğ•\‰æ–Ê‚É‚·‚é
+		//è£ç”»é¢ã‚’è¡¨ç”»é¢ã«ã™ã‚‹
 		ScreenFlip();
 		
 	}
@@ -44,7 +47,7 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
 
 	
 
-	//Dxƒ‰ƒCƒuƒ‰ƒŠ‚ÌI—¹ˆ—
+	//Dxãƒ©ã‚¤ãƒ–ãƒ©ãƒªã®çµ‚äº†å‡¦ç†
 	DxLib_End();
 	return 0;
 

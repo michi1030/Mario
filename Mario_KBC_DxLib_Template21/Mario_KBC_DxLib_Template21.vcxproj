@@ -139,6 +139,7 @@
     <ClCompile Include="source\Actor\Character\Enemy\kuribo-.cpp" />
     <ClCompile Include="source\Actor\Character\Enemy\nokonoko.cpp" />
     <ClCompile Include="source\Actor\Character\Mario.cpp" />
+    <ClCompile Include="source\Actor\Enemy.cpp" />
     <ClCompile Include="source\Actor\Item\OneUpMushroom.cpp" />
     <ClCompile Include="source\Actor\Item\FireFlower.cpp" />
     <ClCompile Include="source\Actor\Item\Mushroom.cpp" />
@@ -148,18 +149,12 @@
     <ClCompile Include="source\File\Sprite.cpp" />
     <ClCompile Include="source\File\StageData.cpp" />
     <ClCompile Include="source\Input\InputManager.cpp" />
-    <ClCompile Include="source\Scene\InGameScene.cpp" />
-<<<<<<< HEAD
     <ClCompile Include="source\Scene\Result.cpp" />
     <ClCompile Include="source\Scene\ResultScene.cpp" />
     <ClCompile Include="source\Scene\SceneManager.cpp" />
     <ClCompile Include="source\Scene\StockScene.cpp" />
+    <ClCompile Include="source\Scene\TestInGame.cpp" />
     <ClCompile Include="source\Scene\Title.cpp" />
-=======
-    <ClCompile Include="source\Scene\ResultScene.cpp" />
-    <ClCompile Include="source\Scene\SceneManager.cpp" />
-    <ClCompile Include="source\Scene\StockScene.cpp" />
->>>>>>> upstream/main
     <ClCompile Include="source\Scene\TitleScene.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -168,31 +163,24 @@
     <ClInclude Include="source\Actor\Character\Enemy\kuribo-.h" />
     <ClInclude Include="source\Actor\Character\Enemy\nokonoko.h" />
     <ClInclude Include="source\Actor\Character\Mario.h" />
-    <ClInclude Include="source\Actor\Item\OneUpMushroom.h" />
+    <ClInclude Include="source\Actor\Enemy.h" />
     <ClInclude Include="source\Actor\Item\FireFlower.h" />
     <ClInclude Include="source\Actor\Item\Mushroom.h" />
+    <ClInclude Include="source\Actor\Item\OneUpMushroom.h" />
     <ClInclude Include="source\Actor\Item\SuperStar.h" />
     <ClInclude Include="source\File\AssetContainer.h" />
     <ClInclude Include="source\File\Sprite.h" />
     <ClInclude Include="source\File\StageData.h" />
     <ClInclude Include="source\Input\InputManager.h" />
-<<<<<<< HEAD
-    <ClInclude Include="source\Scene\InGamaScene.h" />
     <ClInclude Include="source\Scene\InGameScene.h" />
     <ClInclude Include="source\Scene\Result.h" />
-=======
-    <ClInclude Include="source\Scene\InGameScene.h" />
->>>>>>> upstream/main
     <ClInclude Include="source\Scene\ResultScene.h" />
     <ClInclude Include="source\Scene\SceneBase.h" />
     <ClInclude Include="source\Scene\SceneManager.h" />
     <ClInclude Include="source\Scene\SceneType.h" />
     <ClInclude Include="source\Scene\Stock.h" />
-<<<<<<< HEAD
     <ClInclude Include="source\Scene\StockScene.h" />
     <ClInclude Include="source\Scene\Title.h" />
-=======
->>>>>>> upstream/main
     <ClInclude Include="source\Scene\TitleScene.h" />
     <ClInclude Include="source\Utility\Math\MathUtils.h" />
     <ClInclude Include="source\Utility\Math\Vector2.h" />

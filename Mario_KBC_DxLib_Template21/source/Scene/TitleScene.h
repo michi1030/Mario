@@ -1,5 +1,4 @@
 #pragma once
-<<<<<<< HEAD
 
 #include "SceneBase.h"
 #include "../File/Sprite.h"
@@ -26,5 +25,3 @@ public:
 	virtual eSceneType GetNowSceneType() const override;
 
 };
-=======
->>>>>>> upstream/main

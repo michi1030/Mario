@@ -21,8 +21,11 @@ enum class eActorTag : unsigned char
 	ePlayer,
 	eEnemy,
 	eWall,
-	eItem,
-	eCoin,
+	eItem_Mushroom,     // スーパーキノコ
+	eItem_FireFlower,   // ファイアフラワー
+	eItem_SuperStar,    // スター
+	eItem_OneUpMushroom,// 1UPキノコ
+	eCoin,              // コイン
 };
 
 /// <summary>

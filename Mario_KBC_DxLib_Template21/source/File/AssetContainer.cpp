@@ -50,7 +50,7 @@ const int AssetContainer::GetImages(const std::string& file_name)
 	if (handle == -1)
 	{
 		//—áŠO‚ğƒXƒ[‚·‚é
-		throw std::runtime_error(file_name + "‚ª“Ç‚İ‚Ü‚ê‚Ü‚¹‚ñ‚Å‚µ‚½\n");
+ 		throw std::runtime_error(file_name + "‚ª“Ç‚İ‚Ü‚ê‚Ü‚¹‚ñ‚Å‚µ‚½\n");
 	}
 
 

@@ -1,32 +1,30 @@
-#pragma once
-#include "DxLib.h"
+ï»¿#pragma once
+#include <DxLib.h>
+#include "../Actor.h"
+#include <vector>
 
-class FireFlower {
+class FireFlower : public Actor
+{
 private:
-    float x;
-    float y;
     int width;
     int height;
     int state;
     float startY;
-    bool active;
 
-    // ƒAƒjƒ[ƒVƒ‡ƒ“—p
-    int imageHandles[4]; // 4ƒRƒ}•ª‚Ì‰æ‘œ‚ğ•Û‘¶‚·‚é”z—ñ
-    int animFrame;       // ƒAƒjƒ[ƒVƒ‡ƒ“‚ÌƒJƒEƒ“ƒg—p
-    int currentFrame;    // Œ»İ•\¦‚·‚éƒRƒ}‚Ì”Ô† (0~3)
+    int imageHandles[4];
+    int animFrame;
+    int currentFrame;
 
 public:
     FireFlower();
+    virtual ~FireFlower() override = default;
+
+    virtual void Initialize() override;
+    virtual void Update(float delta_second) override;
+    virtual void Draw() const override;
+    virtual void OnHitCollisionEnter(Actor* actor) override;
+    virtual eActorTag GetActorTag() const override { return eActorTag::eItem_FireFlower; }
 
     void Spawn(float startX, float startYPos);
-    void Update();
-    void Draw();
     void Deactivate();
-
-    bool IsActive();
-    float GetX();
-    float GetY();
-    int GetWidth();
-    int GetHeight();
 };

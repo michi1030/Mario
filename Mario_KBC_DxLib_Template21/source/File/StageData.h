@@ -13,6 +13,13 @@ enum class ePanelID : unsigned char
 	eWall,
 	eBranch,
 	eGate,
+	eBlock,
+	eHardBlock,
+	eHatena,
+	eDokan_a,
+	eDokan_b,
+	eDokan_c,
+	eDokan_d,
 };
 
 /// <summary>

@@ -43,7 +43,7 @@ const int AssetContainer::GetImages(const std::string& file_name)
 	}
 
 	//ファイルパスを作成する
-	std::string full_path = "assets/images/" + file_name;
+	std::string full_path = "assets/Images/" + file_name;
 	//画像の読み込み
 	int handle = LoadGraph(full_path.c_str());
 	//エラーチェック
@@ -52,6 +52,7 @@ const int AssetContainer::GetImages(const std::string& file_name)
 		//例外をスローする
 		throw std::runtime_error(file_name + "が読み込まれませんでした\n");
 	}
+
 
 	//コンテナ内に登録を行う
 	image_container.emplace(file_name, handle);

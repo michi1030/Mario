@@ -92,23 +92,29 @@ void TitleScene::DrawStringCustom(int x, int y, const char* str) const
     {
         char c = str[i];
         int drawX = x + (i * charWidth);
+        int handle = -1;
 
         if (c >= 'A' && c <= 'Z')
         {
-            DrawRotaGraph(drawX, y, 2.0, 0.0, (*fontAlphaSprite)[c - 'A'], TRUE);
+            handle = (*fontAlphaSprite)[c - 'A'];
         }
         else if (c >= 'a' && c <= 'z')
         {
-            DrawRotaGraph(drawX, y, 2.0, 0.0, (*fontAlphaSprite)[c - 'a'], TRUE);
+            handle = (*fontAlphaSprite)[c - 'a'];
         }
         else if (c >= '0' && c <= '9')
         {
-            DrawRotaGraph(drawX, y, 2.0, 0.0, (*fontNumSprite)[c - '0'], TRUE);
+            handle = (*fontNumSprite)[c - '0'];
         }
-        else if (c == '-') DrawRotaGraph(drawX, y, 2.0, 0.0, (*fontNumSprite)[10], TRUE);
-        else if (c == 'x') DrawRotaGraph(drawX, y, 2.0, 0.0, (*fontNumSprite)[11], TRUE);
-        else if (c == '!') DrawRotaGraph(drawX, y, 2.0, 0.0, (*fontNumSprite)[12], TRUE);
-        else if (c == '.') DrawRotaGraph(drawX, y, 2.0, 0.0, (*fontNumSprite)[14], TRUE);
+        else if (c == '-') handle = (*fontNumSprite)[10];
+        else if (c == 'x') handle = (*fontNumSprite)[11];
+        else if (c == '!') handle = (*fontNumSprite)[12];
+        else if (c == '.') handle = (*fontNumSprite)[14];
+
+        if (handle != -1)
+        {
+            DrawRotaGraph(drawX, y, 2.0, 0.0, handle, TRUE);
+        }
     }
 }
 

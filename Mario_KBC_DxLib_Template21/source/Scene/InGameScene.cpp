@@ -44,16 +44,16 @@ InGameScene::~InGameScene()
 void InGameScene::Initialize()
 {
     //âÊëúÉAÉZÉbÉgì«Ç›çûÇ›
-    floor = AssetContainer::Get()->GetImages("floor.png");
-    block = AssetContainer::Get()->GetImages("block.png");
-    hard_block = AssetContainer::Get()->GetImages("kai_block.png");
+    floor = AssetContainer::Get()->GetImages("Block/floor.png");
+    block = AssetContainer::Get()->GetImages("Block/block.png");
+    hard_block = AssetContainer::Get()->GetImages("Block/kai_block.png");
 
     dokan_lu = AssetContainer::Get()->GetImages("dokan_left_up.png");
     dokan_ru = AssetContainer::Get()->GetImages("dokan_right_up.png");
     dokan_ld = AssetContainer::Get()->GetImages("dokan_left_down.png");
     dokan_rd = AssetContainer::Get()->GetImages("dokan_right_down.png");
 
-    hatena = new DivSprite("hatena.png", 4, 1);
+    hatena = new DivSprite("Block/hatena.png", 4, 1);
 
     cloud0= AssetContainer::Get()->GetImages("cloud1.png");
     cloud1= AssetContainer::Get()->GetImages("cloud2.png");
@@ -89,6 +89,23 @@ eSceneType InGameScene::Update(float delta_second)
 
 void InGameScene::Draw() const
 {
+    const float draw_chip_size = 768.0f / 14.0f;
+    //ëSëÃÇãÛâÊëúÇ≈ñÑÇﬂÇ¬Ç≠Ç∑
+    if (sky != -1)
+    {
+        for (int y = 0;y<14;++y)
+        {
+            for (int x = 0;x<=static_cast<int>(1024.0f/draw_chip_size)+1;++x)
+            {
+                int x1 = static_cast<int>(x * draw_chip_size);
+                int y1 = static_cast<int>(y * draw_chip_size);
+                int x2 = static_cast<int>((x + 1) * draw_chip_size);
+                int y2 = static_cast<int>((y + 1) * draw_chip_size);
+                DrawExtendGraph(x1,y1,x2,y2, sky, TRUE);
+            }
+        }
+    }
+    
     //êÊÇ…îwåiÇï`âÊÇ∑ÇÈ
     for (size_t y = 0; y < bg_data.size(); ++y)
     {
@@ -96,73 +113,84 @@ void InGameScene::Draw() const
         {
             const std::string& cell = bg_data[y][x];
             
+            if (cell == "0" || cell.empty())
+            {
+                continue;
+            }
+
             //îwåiï`âÊÇÃç¿ïWê›íË
-            int draw_x = static_cast<int>(StageData::STAGE_OFFSET_X + x * StageData::CHIP_SIZE);
-            int draw_y = static_cast<int>(StageData::STAGE_OFFSET_Y + y * StageData::CHIP_SIZE);
+            int x1 = static_cast<int>(x * draw_chip_size);
+            int y1 = static_cast<int>(y * draw_chip_size);
+            int x2 = static_cast<int>((x + 1) * draw_chip_size);
+            int y2 = static_cast<int>((y + 1) * draw_chip_size);
+
+            int handle = -1;
 
             if (cell == "z")
             {
-                DrawGraph(draw_x, draw_y, cloud0, TRUE);
+                handle = cloud0;
             }
             else if (cell == "h")
             {
-                DrawGraph(draw_x, draw_y, cloud1, TRUE);
+                handle = cloud1;
             }
             else if (cell == "i")
             {
-                DrawGraph(draw_x, draw_y, cloud2, TRUE);
+                handle = cloud2;
             }
             else if (cell == "j")
             {
-                DrawGraph(draw_x, draw_y, cloud3, TRUE);
+                handle = cloud3;
             }
             else if (cell == "k")
             {
-                DrawGraph(draw_x, draw_y, cloud4, TRUE);
+                handle = cloud4;
             }
             else if (cell == "l")
             {
-                DrawGraph(draw_x, draw_y, cloud5, TRUE);
+                handle = cloud5;
             }
             else if (cell == "x")
             {
-                DrawGraph(draw_x, draw_y, ha1, TRUE);
+                handle = ha1;
             }
             else if (cell == "a")
             {
-                DrawGraph(draw_x, draw_y, ha0, TRUE);
+                handle = ha0;
             }
             else if (cell == "b")
             {
-                DrawGraph(draw_x, draw_y, ha2, TRUE);
+                handle = ha2;
             }
             else if (cell == "y")
             {
-                DrawGraph(draw_x, draw_y, Mt2, TRUE);
+                handle = Mt2;
             }
             else if (cell == "c")
             {
-                DrawGraph(draw_x, draw_y, Mt0, TRUE);
+                handle = Mt0;
             }
             else if (cell == "d")
             {
-                DrawGraph(draw_x, draw_y, Mt1, TRUE);
+                handle = Mt1;
             }
             else if (cell == "e")
             {
-                DrawGraph(draw_x, draw_y, Mt5, TRUE);
+                handle = Mt5;
             }
             else if (cell == "f")
             {
-                DrawGraph(draw_x, draw_y, Mt3, TRUE);
+                handle = Mt3;
             }
             else if (cell == "g")
             {
-                DrawGraph(draw_x, draw_y, Mt4, TRUE);
+                handle = Mt4;
             }
-            else if (cell == "0")
+           
+
+            if (handle != -1)
             {
-                DrawGraph(draw_x, draw_y, sky, TRUE);
+                DrawExtendGraph(x1, y1, x2, y2, handle, TRUE);
             }
         }
     }
@@ -181,10 +209,58 @@ void InGameScene::Draw() const
             }
 
             //ÉXÉeÅ[ÉWï`âÊÇÃç¿ïWê›íË
-            int draw_x = static_cast<int>(StageData::STAGE_OFFSET_X + x * StageData::CHIP_SIZE);
-            int draw_y = static_cast<int>(StageData::STAGE_OFFSET_Y + y * StageData::CHIP_SIZE);
+            int x1 = static_cast<int>(x * draw_chip_size);
+            int y1 = static_cast<int>(y * draw_chip_size);
+            int x2 = static_cast<int>((x + 1) * draw_chip_size);
+            int y2 = static_cast<int>((y + 1) * draw_chip_size);
 
-            DrawGraph(draw_x, draw_y, floor, TRUE);
+
+            int Stage_handle = -1;
+
+            switch (id)
+            {
+            case ePanelID::eWall:
+                Stage_handle = floor;
+                break;
+
+            case ePanelID::eBlock:
+                Stage_handle = block;
+                break;
+            
+            case ePanelID::eHatena:
+                Stage_handle = (*hatena)[0];
+                break;
+
+            case ePanelID::eHardBlock:
+                Stage_handle = hard_block;
+                break;
+
+            case ePanelID::eDokan_a:
+                Stage_handle = dokan_lu;
+                break;
+
+            case ePanelID::eDokan_b:
+                Stage_handle = dokan_ru;
+                break;
+
+            case ePanelID::eDokan_c:
+                Stage_handle = dokan_ld;
+                break;
+
+            case ePanelID::eDokan_d:
+                Stage_handle = dokan_rd;
+                break;
+
+            default:
+                Stage_handle = floor;
+                break;
+            }
+
+            if (Stage_handle != -1)
+            {
+                DrawExtendGraph(x1, y1, x2, y2, Stage_handle, TRUE);
+            }
+            
         }
     }
 
@@ -256,6 +332,8 @@ void InGameScene::LoadStageData()
                 Vector2 pos(
                     StageData::STAGE_OFFSET_X + x * StageData::CHIP_SIZE,
                     StageData::STAGE_OFFSET_Y + y * StageData::CHIP_SIZE
+                    //x*StageData::CHIP_SIZE,
+                    //y*StageData::CHIP_SIZE
                 );
 
                 if (cell == "1")
@@ -264,15 +342,15 @@ void InGameScene::LoadStageData()
                 }
                 else if (cell == "2")
                 {
-                    StageData::Get()->SetPanelData(ePanelID::eWall, pos, 1, 1);
+                    StageData::Get()->SetPanelData(ePanelID::eHatena, pos, 1, 1);
                 }
                 else if (cell == "3")
                 {
-                    StageData::Get()->SetPanelData(ePanelID::eWall, pos, 1, 1);
+                    StageData::Get()->SetPanelData(ePanelID::eBlock, pos, 1, 1);
                 }
                 else if (cell == "4")
                 {
-                    StageData::Get()->SetPanelData(ePanelID::eWall, pos, 1, 1);
+                    StageData::Get()->SetPanelData(ePanelID::eHardBlock, pos, 1, 1);
                 }
                 else if (cell == "5")
                 {
@@ -287,19 +365,19 @@ void InGameScene::LoadStageData()
 
                 else if (cell == "a")
                 {
-                    StageData::Get()->SetPanelData(ePanelID::eWall, pos, 1, 1);
+                    StageData::Get()->SetPanelData(ePanelID::eDokan_a, pos, 1, 1);
                 }
                 else if (cell == "b")
                 {
-                    StageData::Get()->SetPanelData(ePanelID::eWall, pos, 1, 1);
+                    StageData::Get()->SetPanelData(ePanelID::eDokan_b, pos, 1, 1);
                 }
                 else if (cell == "c")
                 {
-                    StageData::Get()->SetPanelData(ePanelID::eWall, pos, 1, 1);
+                    StageData::Get()->SetPanelData(ePanelID::eDokan_c, pos, 1, 1);
                 }
                 else if (cell == "d")
                 {
-                    StageData::Get()->SetPanelData(ePanelID::eWall, pos, 1, 1);
+                    StageData::Get()->SetPanelData(ePanelID::eDokan_d, pos, 1, 1);
                 }
             }
             x++;

@@ -58,11 +58,19 @@ DivSprite::~DivSprite()
 
 int DivSprite::operator[](int index) const
 {
+	if (index < 0 || index >= static_cast<int>(split_handle.size()))
+	{
+		return -1;
+	}
 	return split_handle[index];
 }
 
 int DivSprite::At(int index) const
 {
+	if (index < 0 || index >= static_cast<int>(split_handle.size()))
+	{
+		return -1;
+	}
 	return split_handle[index];
 }
 

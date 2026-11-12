@@ -2,7 +2,7 @@
 
 //ê√ìIÉÅÉìÉoïœêîÇÃíËã`
 StageData* StageData::instance = nullptr;
-const float StageData::CHIP_SIZE = 24.0f;
+const float StageData::CHIP_SIZE = 32.0f;
 const float StageData::STAGE_OFFSET_X = 0.0f;
 const float StageData::STAGE_OFFSET_Y = (CHIP_SIZE * 3.0f);
 const Vector2 StageData::STAGE_OFFSET = Vector2(STAGE_OFFSET_X, STAGE_OFFSET_Y);
@@ -65,7 +65,7 @@ const std::unordered_map<eAdjacentDirection, ePanelID> StageData::GetAdjacentPan
 
 			if ((y + 1) < data.size())
 			{
-				result[eAdjacentDirection::eUp] = data[y + 1][x];
+				result[eAdjacentDirection::eDown] = data[y + 1][x];
 			}
 		}
 	}
@@ -93,8 +93,12 @@ void StageData::SetPanelData(ePanelID id, const Vector2& location, int mx, int m
 
 	for (int i = y; i < y + my; ++i)
 	{
+		if (i < 0 || i >= static_cast<int>(data.size())) continue;
+
 		for (int j = x; j < x + mx; ++j)
 		{
+			if (j < 0 || j >= static_cast<int>(data[i].size())) continue;
+
 			data[i][j] = id;
 		}
 	}
@@ -109,8 +113,8 @@ void StageData::ConvertToIndex(const Vector2& location, int& x, int& y) const
 
 void StageData::Load()
 {
-	std::vector<ePanelID> init_data(28, ePanelID::eNone);
-	data = std::vector<std::vector<ePanelID>>(31, init_data);
+	std::vector<ePanelID> init_data(250, ePanelID::eNone);
+	data = std::vector<std::vector<ePanelID>>(14, init_data);
 }
 
 void StageData::Unload()

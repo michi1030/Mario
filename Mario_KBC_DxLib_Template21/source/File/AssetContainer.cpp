@@ -50,7 +50,7 @@ const int AssetContainer::GetImages(const std::string& file_name)
 	if (handle == -1)
 	{
 		//例外をスローする
-		throw std::runtime_error(file_name + "が読み込まれませんでした\n");
+ 		throw std::runtime_error(file_name + "が読み込まれませんでした\n");
 	}
 
 	//コンテナ内に登録を行う

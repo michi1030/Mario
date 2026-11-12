@@ -1,65 +1,83 @@
 #include "FireFlower.h"
+#include "../../File/AssetContainer.h"
+#include "../../File/Sprite.h"
 
-FireFlower::FireFlower() {
-    x = 0.0f;
-    y = 0.0f;
-    width = 32;
-    height = 32;
-    state = 0;
-    startY = 0.0f;
-    active = false;
-    animFrame = 0;
-    currentFrame = 0;
-
-    for (int i = 0; i < 4; i++) {
+FireFlower::FireFlower()
+    : Actor()
+    , width(32)
+    , height(32)
+    , state(0)
+    , startY(0.0f)
+    , animFrame(0)
+    , currentFrame(0)
+{
+    radius = 16.0f;
+    for (int i = 0; i < 4; ++i)
+    {
         imageHandles[i] = -1;
     }
 }
 
-void FireFlower::Spawn(float startX, float startYPos) {
-    x = startX;
-    y = startYPos;
-    startY = startYPos;
-    state = 0;
-    active = true;
-    animFrame = 0;
-    currentFrame = 0;
-
-    // 画像を4分割して読み込む（全4枚、横4列、縦1行、1枚の横幅32px、縦幅32px）
-    LoadDivGraph("assets/Images/Item/flower.png", 4, 4, 1, 32, 32, imageHandles);
+void FireFlower::Initialize()
+{
+    // AssetContainer / DivSprite を経由して分割スプライトを取得
+    DivSprite sprite("Item/flower.png", 4, 1);
+    for (int i = 0; i < 4 && i < sprite.GetSize(); ++i)
+    {
+        imageHandles[i] = sprite[i]; // int型のハンドルを取り出して配列に格納
+    }
 }
 
-void FireFlower::Update() {
-    if (active == false) return;
+void FireFlower::Spawn(float startX, float startYPos)
+{
+    location.x = startX;
+    location.y = startYPos;
+    startY = startYPos;
+    state = 0;
+    actor_state = eActorState::eActive;
+}
 
-    if (state == 0) {
-        y -= 1.0f;
-        if (startY - y >= height) {
+void FireFlower::Update(float delta_second)
+{
+    if (actor_state != eActorState::eActive) return;
+
+    // パラパラアニメーション (4コマを順に切り替え)
+    animFrame++;
+    if (animFrame >= 8)
+    {
+        animFrame = 0;
+        currentFrame = (currentFrame + 1) % 4;
+    }
+
+    if (state == 0)
+    {
+        location.y -= 1.0f;
+        if (startY - location.y >= height)
+        {
             state = 1;
         }
     }
+}
 
-    // --- アニメーションの更新 ---
-    animFrame++;
-    if (animFrame >= 8) { // 8フレームごとに次のコマへ（数字を小さくすると高速化）
-        animFrame = 0;
-        currentFrame = (currentFrame + 1) % 4; // 0 -> 1 -> 2 -> 3 -> 0 ...
+void FireFlower::Draw() const
+{
+    if (actor_state != eActorState::eActive || imageHandles[currentFrame] == -1) return;
+
+    // int 配列の指定コマを描画
+    DrawGraph((int)location.x, (int)location.y, imageHandles[currentFrame], TRUE);
+}
+
+void FireFlower::OnHitCollisionEnter(Actor* actor)
+{
+    if (!actor) return;
+    if (actor->GetActorTag() == eActorTag::ePlayer)
+    {
+        Deactivate();
+        DestroyActor(this);
     }
 }
 
-void FireFlower::Draw() {
-    if (active == false || imageHandles[0] == -1) return;
-
-    // 現在のコマ番号（currentFrame）の画像を描画する
-    DrawGraph((int)x, (int)y, imageHandles[currentFrame], TRUE);
+void FireFlower::Deactivate()
+{
+    actor_state = eActorState::eDead;
 }
-
-void FireFlower::Deactivate() {
-    active = false;
-}
-
-bool FireFlower::IsActive() { return active; }
-float FireFlower::GetX() { return x; }
-float FireFlower::GetY() { return y; }
-int FireFlower::GetWidth() { return width; }
-int FireFlower::GetHeight() { return height; }

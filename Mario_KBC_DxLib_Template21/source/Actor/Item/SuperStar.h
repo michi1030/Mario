@@ -1,35 +1,33 @@
-#pragma once
-#include "DxLib.h"
+﻿#pragma once
+#include <DxLib.h>
+#include "../Actor.h"
 
-class SuperStar {
+class SuperStar : public Actor
+{
 private:
-    float x;
-    float y;
     float vx;
     float vy;
-    float boundPower;
+    float bouncePower;
     int width;
     int height;
     int state;
     float startY;
-    bool active;
+    float groundY;
 
-    // �A�j���[�V�����p
-    int imageHandles[4];
-    int animFrame;
-    int currentFrame;
+    int imageHandle;   // AssetContainerから取得する単一ハンドル
+    int animFrame;     // アニメーションカウント
+    int currentFrame;  // 現在のコマ番号 (0〜3)
 
 public:
     SuperStar();
+    virtual ~SuperStar() override = default;
+
+    virtual void Initialize() override;
+    virtual void Update(float delta_second) override;
+    virtual void Draw() const override;
+    virtual void OnHitCollisionEnter(Actor* actor) override;
+    virtual eActorTag GetActorTag() const override { return eActorTag::eItem_SuperStar; }
 
     void Spawn(float startX, float startYPos);
-    void Update(float groundY);
-    void Draw();
     void Deactivate();
-
-    bool IsActive();
-    float GetX();
-    float GetY();
-    int GetWidth();
-    int GetHeight();
 };

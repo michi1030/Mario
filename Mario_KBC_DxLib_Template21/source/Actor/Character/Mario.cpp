@@ -1,12 +1,9 @@
 #include "Mario.h"
-#include "../../Scene/IngameScene.h"
-#include "../../Input/InputManager.h"
 #include "../../File/AssetContainer.h"
-#include "../Item/FireFlower.h"
-#include "../Item/Mushroom.h"
-#include "../Item/OneUpMushroom.h"
-#include "../Item/SuperStar.h"
+#include "../../Input/InputManager.h"
 #include <DxLib.h>
+
+
 
 #define D_GRAVITY 1000.0f
 
@@ -14,8 +11,17 @@ Mario::Mario()
 	: Character()
 	, animation_time()
 	, animation_num()
+	, state(tibi)
+	, level(0)
+	, move_animation("mario.png", 9, 1)
+	, is_animation(false)
+	, is_Ground(true)
+	, is_jumptrigger(false)
+	, is_jumpheld(false)
+	, is_dash(false)
+	, animation_flag(true)
 {
-	
+
 }
 
 Mario::~Mario()
@@ -26,19 +32,40 @@ Mario::~Mario()
 void Mario::Initialize()
 {
 	AssetContainer* container = AssetContainer::Get();
-	state = tibi;
-	speed = 1.0f;
-	jump = 300.0f;
-	jumpBoost = 400.0f;
+	location = Vector2(320.0f, 240.0f);
+	walkAcceleration = 1000.0f;
+	dashAcceleration = 1500.0f;
+	walkMaxSpeed = 150.0f;
+	dashMaxSpeed = 250.0f;
+	friction = 800.0f;
+	jump = 350.0f;
+	jumpBoost = 1500.0f;
+	jumpheldtime = 0.0f;
+	maxjumpheldtime = 0.2f;
 	radius = 10.0f;
 	star_mode = false;
-	IsGround = true;
-	
+	image = move_animation[0];
 }
 
 void Mario::Update(float delta_second)
 {
 	InputCheck(delta_second);
+	Jump(delta_second);
+	Movement(delta_second);
+
+	UpdateCollision();
+
+	////èdóÕ
+	velocity.y += D_GRAVITY * delta_second;
+
+	//âºínñ 
+	if (location.y >= 300.0f)
+	{
+		location.y = 300.0f;
+		velocity.y = 0.0f;
+		is_Ground = true;
+	}
+
 	switch (state)
 	{
 	case tibi:
@@ -54,13 +81,7 @@ void Mario::Update(float delta_second)
 		break;
 	}
 
-	//èdóÕ
-	velocity.y += D_GRAVITY * delta_second;
-	if (velocity.y < 0.05)
-	{
-		velocity.y = 0;
-		IsGround = true;
-	}
+	MoveAnimation(delta_second);
 }
 
 void Mario::Finalize()
@@ -76,9 +97,9 @@ void Mario::OnHitCollisionEnter(Actor* actor)
 	{
 
 	}
-	else if (tag == eActorTag::eItem)
+	else if (tag == eActorTag::eItem_Mushroom)
 	{
-		
+
 	}
 	else if (tag == eActorTag::eWall)
 	{
@@ -93,32 +114,141 @@ eActorTag Mario::GetActorTag() const
 
 void Mario::InputCheck(float delta_second)
 {
-	if (InputManager::GetButtonState(XINPUT_BUTTON_DPAD_LEFT) == eInputState::ePressed)
+	int x = 0;
+
+	if (InputManager::GetButtonState(XINPUT_BUTTON_DPAD_LEFT) == eInputState::eHeld || InputManager::GetKeyState(KEY_INPUT_LEFT) == eInputState::eHeld)
 	{
-		velocity.x = -speed;
+		x = -1;
+		direction = TRUE;
+		is_animation = true;
+		if (InputManager::GetButtonState(XINPUT_BUTTON_B) == eInputState::eHeld)
+		{
+			is_dash = true;
+		}
 	}
-	else if (InputManager::GetButtonState(XINPUT_BUTTON_DPAD_RIGHT) == eInputState::ePressed)
+	else if (InputManager::GetButtonState(XINPUT_BUTTON_DPAD_RIGHT) == eInputState::eHeld || InputManager::GetKeyState(KEY_INPUT_RIGHT) == eInputState::eHeld)
 	{
-		velocity.x = speed;
+		x = 1;
+		direction = FALSE;
+		is_animation = true;
+		if (InputManager::GetButtonState(XINPUT_BUTTON_B) == eInputState::eHeld)
+		{
+			is_dash = true;
+		}
+		else
+		{
+			is_dash = false;
+		}
 	}
-	else if (InputManager::GetButtonState(XINPUT_BUTTON_B) == eInputState::ePressed && InputManager::GetButtonState(XINPUT_BUTTON_DPAD_LEFT) == eInputState::ePressed || InputManager::GetButtonState(XINPUT_BUTTON_DPAD_RIGHT) == eInputState::ePressed)
+
+	Dash(delta_second);
+
+	if (x != 0)
 	{
-		speed = 2.0f;
+		velocity.x += x * acceleration * delta_second;
 	}
 	else
 	{
-		velocity.x = 0;
-		speed = 1.0f;
+		is_animation = false;
+		if (velocity.x > 0.0f)
+		{
+			velocity.x -= friction * delta_second;
+
+			if (velocity.x < 0.0f)
+			{
+				velocity.x = 0.0f;
+			}
+		}
+		else if (velocity.x < 0.0f)
+		{
+			velocity.x += friction * delta_second;
+
+			if (velocity.x > 0.0f)
+			{
+				velocity.x = 0.0f;
+			}
+		}
 	}
-	if (InputManager::GetButtonState(XINPUT_BUTTON_A) == eInputState::ePressed && IsGround == true)
+
+	if (!is_dash)
 	{
-		velocity.y = -jump;
-		IsGround = false;
+		Dash(delta_second);
+		if (velocity.x > maxSpeed)
+		{
+			velocity.x -= friction * delta_second;
+
+			if (velocity.x < maxSpeed)
+			{
+				velocity.x = maxSpeed;
+			}
+		}
+		else if (velocity.x < -maxSpeed)
+		{
+			velocity.x += friction * delta_second;
+
+			if (velocity.x > -maxSpeed)
+			{
+				velocity.x = -maxSpeed;
+			}
+		}
 	}
-	if (InputManager::GetButtonState(XINPUT_BUTTON_A) == eInputState::eHeld && velocity.y < 0)
+
+	if (InputManager::GetButtonState(XINPUT_BUTTON_A) == eInputState::ePressed || InputManager::GetKeyState(KEY_INPUT_SPACE) == eInputState::ePressed)
 	{
-		velocity.y -= jumpBoost * delta_second;
+		is_jumptrigger = true;
 	}
+	if (InputManager::GetButtonState(XINPUT_BUTTON_A) == eInputState::eHeld || InputManager::GetKeyState(KEY_INPUT_SPACE) == eInputState::eHeld)
+	{
+		is_jumpheld = true;
+	}
+	if (InputManager::GetButtonState(XINPUT_BUTTON_A) == eInputState::eReleased || InputManager::GetKeyState(KEY_INPUT_SPACE) == eInputState::eReleased)
+	{
+		is_jumptrigger = false;
+		is_jumpheld = false;
+	}
+}
+
+void Mario::MoveAnimation(float delta_second)
+{
+	if (is_animation)
+	{
+		animation_time += delta_second;
+		if (animation_time >= 0.3f)
+		{
+			if (animation_flag == true)
+			{
+				animation_num++;
+				if (animation_num >= 4)
+				{
+					animation_flag = false;
+					animation_num--;
+				}
+			}
+			if (animation_flag == false)
+			{
+				animation_num--;
+				if (animation_num <= 1)
+				{
+					animation_flag = true;
+				}
+			}
+			animation_time = 0.0f;
+			image = move_animation[animation_num];
+		}
+	}
+	else
+	{
+		image = move_animation[0];
+	}
+}
+
+void Mario::UpdateCollision()
+{
+	collisionLeft = location.x - collisionWidth / 2;
+	collisionRight = location.x + collisionWidth / 2;
+
+	collisionTop = location.y - collisionHeight / 2;
+	collisionBottom = location.y + collisionHeight / 2;
 }
 
 void Mario::Tibi()
@@ -134,6 +264,37 @@ void Mario::Deka()
 void Mario::Fire()
 {
 
+}
+
+void Mario::Jump(float delta_second)
+{
+	jumpheldtime += delta_second;
+	if (is_jumptrigger && is_Ground)
+	{
+		velocity.y = -jump;
+		is_Ground = false;
+		jumpheldtime = 0.0f;
+	}
+	if (is_jumpheld && velocity.y < 0.0f && jumpheldtime < maxjumpheldtime)
+	{
+		velocity.y -= jumpBoost * delta_second;
+		is_jumpheld = false;
+
+	}
+}
+
+void Mario::Dash(float delta_second)
+{
+	if (is_dash)
+	{
+		acceleration = dashAcceleration;
+		maxSpeed = dashMaxSpeed;
+	}
+	else
+	{
+		acceleration = walkAcceleration;
+		maxSpeed = walkMaxSpeed;
+	}
 }
 
 bool Mario::isStar()

@@ -79,6 +79,10 @@ void InGameScene::Initialize()
     StageData::Get();
     LoadBackgroundData();
     LoadStageData();
+
+	player = new Mario();
+	player->Initialize();
+    owned_actors.push_back(player);
 }
 
 eSceneType InGameScene::Update(float delta_second)

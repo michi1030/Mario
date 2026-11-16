@@ -27,7 +27,7 @@ private:
 private:
     int score;//スコア
 	std::vector<Actor*>owned_actors;//所有するアクタ
-	class Player* player;//プレイヤー情報
+	class Mario* player;//プレイヤー情報
 	class Enemy* enemy;//敵情報
 	int bgm;//BGM
 	int font_handle;//フォントハンドル

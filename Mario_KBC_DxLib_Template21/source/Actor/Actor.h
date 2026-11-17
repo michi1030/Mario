@@ -37,6 +37,7 @@ protected:
 	Vector2 location;//ˆÊ’uî•ñ
 	float radius;//”¼Œaî•ñ
 	int image;//‰æ‘œî•ñ
+	int direction;//Œü‚«
 	double scale;//‘å‚«‚³
 	unsigned char z_layer;//ZƒŒƒCƒ„[
 	bool is_destroy;//€–Só‘Ô

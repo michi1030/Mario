@@ -20,7 +20,7 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
 	//裏画面からウインドウを表示する
 	SetDrawScreen(DX_SCREEN_BACK);
 	SceneManager scenemanagaer;
-	float delta_second(0.0f);
+	float delta_second = 1.0f / 60.0f;
 
 	while (ProcessMessage() != -1)
 	{

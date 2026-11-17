@@ -9,6 +9,7 @@ Actor::Actor()
 	, z_layer(5U)
 	, is_destroy(true)
 	, actor_state(eActorState::eActive)
+	, direction(FALSE)
 {
 
 }
@@ -32,7 +33,7 @@ void Actor::Draw() const
 {
 	if (image)
 	{
-		DrawRotaGraphF(location.x, location.y, scale, 0.0, image, TRUE);
+		DrawRotaGraphF(location.x, location.y, scale, 0.0, image, TRUE, direction);
 	}
 }
 

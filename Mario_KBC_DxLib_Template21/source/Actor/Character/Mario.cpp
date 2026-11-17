@@ -3,10 +3,6 @@
 #include "../../Input/InputManager.h"
 #include <DxLib.h>
 
-
-
-#define D_GRAVITY 1000.0f
-
 Mario::Mario()
 	: Character()
 	, animation_time()
@@ -32,7 +28,10 @@ Mario::~Mario()
 void Mario::Initialize()
 {
 	AssetContainer* container = AssetContainer::Get();
-	location = Vector2(320.0f, 240.0f);
+	location = Vector2(155.0f, 626.0f);
+	scale = 2.0f;
+	speed = 1.0f;
+	gravity = 1000.0f;
 	walkAcceleration = 1000.0f;
 	dashAcceleration = 1500.0f;
 	walkMaxSpeed = 150.0f;
@@ -43,6 +42,7 @@ void Mario::Initialize()
 	jumpheldtime = 0.0f;
 	maxjumpheldtime = 0.2f;
 	radius = 10.0f;
+	flag = 0.0f;
 	star_mode = false;
 	image = move_animation[0];
 }
@@ -51,17 +51,18 @@ void Mario::Update(float delta_second)
 {
 	InputCheck(delta_second);
 	Jump(delta_second);
-	Movement(delta_second);
+	
 
-	UpdateCollision();
+
 
 	////d—Í
-	velocity.y += D_GRAVITY * delta_second;
+	velocity.y += gravity * delta_second;
+
 
 	//‰¼’n–Ê
-	if (location.y >= 300.0f)
+	if (location.y >= 626.0f)
 	{
-		location.y = 300.0f;
+		location.y = 626.0f;
 		velocity.y = 0.0f;
 		is_Ground = true;
 	}
@@ -81,6 +82,9 @@ void Mario::Update(float delta_second)
 		break;
 	}
 
+
+	Movement(delta_second);
+	UpdateCollision();
 	MoveAnimation(delta_second);
 }
 
@@ -114,11 +118,10 @@ eActorTag Mario::GetActorTag() const
 
 void Mario::InputCheck(float delta_second)
 {
-	int x = 0;
 
 	if (InputManager::GetButtonState(XINPUT_BUTTON_DPAD_LEFT) == eInputState::eHeld || InputManager::GetKeyState(KEY_INPUT_LEFT) == eInputState::eHeld)
 	{
-		x = -1;
+		flag = -1;
 		direction = TRUE;
 		is_animation = true;
 		if (InputManager::GetButtonState(XINPUT_BUTTON_B) == eInputState::eHeld)
@@ -128,7 +131,7 @@ void Mario::InputCheck(float delta_second)
 	}
 	else if (InputManager::GetButtonState(XINPUT_BUTTON_DPAD_RIGHT) == eInputState::eHeld || InputManager::GetKeyState(KEY_INPUT_RIGHT) == eInputState::eHeld)
 	{
-		x = 1;
+		flag = 1;
 		direction = FALSE;
 		is_animation = true;
 		if (InputManager::GetButtonState(XINPUT_BUTTON_B) == eInputState::eHeld)
@@ -140,12 +143,16 @@ void Mario::InputCheck(float delta_second)
 			is_dash = false;
 		}
 	}
+	else
+	{
+		flag = 0;
+	}
 
 	Dash(delta_second);
 
-	if (x != 0)
+	if (flag!= 0)
 	{
-		velocity.x += x * acceleration * delta_second;
+		velocity.x += flag * acceleration * delta_second;
 	}
 	else
 	{
@@ -278,8 +285,6 @@ void Mario::Jump(float delta_second)
 	if (is_jumpheld && velocity.y < 0.0f && jumpheldtime < maxjumpheldtime)
 	{
 		velocity.y -= jumpBoost * delta_second;
-		is_jumpheld = false;
-
 	}
 }
 

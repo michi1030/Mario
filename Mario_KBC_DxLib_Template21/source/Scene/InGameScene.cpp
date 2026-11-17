@@ -28,6 +28,10 @@ InGameScene::InGameScene()
     , dokan_ru(-1)
     , dokan_ld(-1)
     , dokan_rd(-1)
+    , pole(-1)
+    , pole_top(-1)
+    , flag(-1)
+    , fort(-1)
     , cloud0(-1),cloud1(-1),cloud2(-1),cloud3(-1),cloud4(-1),cloud5(-1)
     , ha0(-1),ha1(-1),ha2(-1)
     , Mt0(-1),Mt1(-1),Mt2(-1),Mt3(-1),Mt4(-1),Mt5(-1)
@@ -52,6 +56,11 @@ void InGameScene::Initialize()
     dokan_ru = AssetContainer::Get()->GetImages("dokan_right_up.png");
     dokan_ld = AssetContainer::Get()->GetImages("dokan_left_down.png");
     dokan_rd = AssetContainer::Get()->GetImages("dokan_right_down.png");
+
+    pole = AssetContainer::Get()->GetImages("pole_down.png");
+    pole_top = AssetContainer::Get()->GetImages("pole.png");
+    flag = AssetContainer::Get()->GetImages("flag.png");
+   // fort = AssetContainer::Get()->GetImages("fort.png");
 
     hatena = new DivSprite("Block/hatena.png", 4, 1);
 
@@ -251,6 +260,22 @@ void InGameScene::Draw() const
                 Stage_handle = dokan_rd;
                 break;
 
+            case ePanelID::ePole:
+                Stage_handle = pole;
+                break;
+
+            case ePanelID::eFlag:
+                Stage_handle = flag;
+                break;
+
+            //case ePanelID::eFort:
+                //Stage_handle = fort;
+                //break;
+
+            case ePanelID::ePoleTop:
+                Stage_handle = pole_top;
+                break;
+
             default:
                 Stage_handle = floor;
                 break;
@@ -265,7 +290,7 @@ void InGameScene::Draw() const
     }
 
     //キャラクターの描画
-    for (auto actor : owned_actors)
+    for (/*auto*/Actor* actor : owned_actors)
     {
         if (actor)
         {
@@ -379,6 +404,22 @@ void InGameScene::LoadStageData()
                 {
                     StageData::Get()->SetPanelData(ePanelID::eDokan_d, pos, 1, 1);
                 }
+                else if (cell == "7")
+                {
+                    StageData::Get()->SetPanelData(ePanelID::ePole, pos, 1, 1);
+                }
+                else if (cell == "8")
+                {
+                    StageData::Get()->SetPanelData(ePanelID::ePoleTop, pos, 1, 1);
+                }
+                else if (cell == "f")
+                {
+                    StageData::Get()->SetPanelData(ePanelID::eFlag, pos, 1, 1);
+                }
+                //else if (cell == "g")
+                //{
+                   // StageData::Get()->SetPanelData(ePanelID::eFort, pos, 1, 1);
+                //}
             }
             x++;
         }
@@ -431,6 +472,7 @@ void InGameScene::ChangeGameState(eGameState new_state)
 
 void InGameScene::PlayUpdate(float delta_second)
 {
+    //アクタの更新
     for (auto actor : owned_actors)
     {
         if (actor)

@@ -72,7 +72,7 @@ void Mario::OnHitCollisionEnter(Actor* actor)
 {
 	eActorTag tag = actor->GetActorTag();
 
-	if (tag == eActorTag::eEnemy)
+	/*if (tag == eActorTag::eEnemy)
 	{
 
 	}
@@ -83,7 +83,7 @@ void Mario::OnHitCollisionEnter(Actor* actor)
 	else if (tag == eActorTag::eWall)
 	{
 
-	}
+	}*/
 }
 
 eActorTag Mario::GetActorTag() const

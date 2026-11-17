@@ -20,6 +20,11 @@ enum class ePanelID : unsigned char
 	eDokan_b,
 	eDokan_c,
 	eDokan_d,
+	ePole,
+	eFlag,
+	eFort,
+	ePoleTop,
+	
 };
 
 /// <summary>

@@ -27,7 +27,7 @@ private:
 private:
     int score;//スコア
 	std::vector<Actor*>owned_actors;//所有するアクタ
-	class Player* player;//プレイヤー情報
+	class Mario* player;//プレイヤー情報
 	class Enemy* enemy;//敵情報
 	int bgm;//BGM
 	int font_handle;//フォントハンドル
@@ -43,6 +43,10 @@ private:
 	int dokan_ru;//土管　右上
 	int dokan_ld;//土管　左下
 	int dokan_rd;//土管　右下
+	int pole;//ゴールポール
+	int pole_top;//ゴールポールのてっぺん
+	int flag;//ゴール旗
+	int fort;//砦
 
 	int cloud0, cloud1, cloud2, cloud3, cloud4, cloud5;//雲画像達
 	int ha0, ha1, ha2;//葉っぱ画像達

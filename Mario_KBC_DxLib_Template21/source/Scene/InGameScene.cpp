@@ -383,13 +383,13 @@ void InGameScene::LoadStageData()
                 }
                 else if (cell == "5")
                 {
-                    //Kuribo* new_enemy=mew Kuribo(pos);
-                    //owned_actors.push_back(new_enemy);
+                    Kuribo* new_enemy=new Kuribo(pos);
+                    owned_actors.push_back(new_enemy);
                 }
                 else if (cell == "6")
                 {
-                    //Nokonoko* new_enemy= new Nokonoko(pos);
-                    //owned_actors.push_back(new_enemy);
+                    Nokonoko* new_enemy= new Nokonoko(pos);
+                    owned_actors.push_back(new_enemy);
                 }
 
                 else if (cell == "a")

@@ -495,11 +495,22 @@ void InGameScene::ChangeGameState(eGameState new_state)
 
 void InGameScene::PlayUpdate(float delta_second)
 {
+    const float screen_width = 1024.0f;
+
     //アクタの更新
     for (auto actor : owned_actors)
     {
         if (actor)
         {
+            // 敵キャラはカメラの右端付近に入るまで待機（マリオが近づく前に穴へ落ちるのを防ぐ）
+            if (actor->GetActorTag() == eActorTag::eEnemy)
+            {
+                if (actor->GetLocation().x > camera_x + screen_width + 64.0f)
+                {
+                    continue;
+                }
+            }
+
             actor->Update(delta_second);
         }
     }
@@ -507,7 +518,6 @@ void InGameScene::PlayUpdate(float delta_second)
     // カメラ追従処理
     if (player != nullptr)
     {
-        const float screen_width = 1024.0f;
         const float center_x = screen_width * 0.5f;
 
         // マリオが画面中央より右に進んだらカメラを進める（左スクロールはしない本編仕様）
@@ -535,6 +545,7 @@ void InGameScene::PlayUpdate(float delta_second)
         }
     }
 }
+
 void InGameScene::CheckCollision()
 {
 

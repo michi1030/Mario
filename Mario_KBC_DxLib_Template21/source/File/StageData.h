@@ -45,6 +45,7 @@ class StageData final
 {
 public:
 	static const float CHIP_SIZE;//１ブロックの大きさ
+	static const float FORT_CHIP_SIZE;//城のブロックの大きさ
 	static const float STAGE_OFFSET_X;//ステージのずれている量（横）
 	static const float STAGE_OFFSET_Y;//ステージのずれている量（縦）
 	static const Vector2 STAGE_OFFSET;//ステージのずれている量（ベクター）

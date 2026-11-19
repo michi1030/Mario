@@ -3,6 +3,7 @@
 //Ã“Iƒƒ“ƒo•Ï”‚Ì’è‹`
 StageData* StageData::instance = nullptr;
 const float StageData::CHIP_SIZE = 32.0f;
+const float StageData::FORT_CHIP_SIZE = 160.0f;
 const float StageData::STAGE_OFFSET_X = 0.0f;
 const float StageData::STAGE_OFFSET_Y = (CHIP_SIZE * 3.0f);
 const Vector2 StageData::STAGE_OFFSET = Vector2(STAGE_OFFSET_X, STAGE_OFFSET_Y);

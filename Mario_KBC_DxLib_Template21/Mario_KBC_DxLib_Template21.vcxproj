@@ -145,12 +145,16 @@
     <ClCompile Include="source\Actor\Item\Mushroom.cpp" />
     <ClCompile Include="source\Actor\Item\SuperStar.cpp" />
     <ClCompile Include="source\Actor\Item\TestMain.cpp" />
+    <ClCompile Include="source\Appmain.cpp" />
     <ClCompile Include="source\File\AssetContainer.cpp" />
     <ClCompile Include="source\File\Sprite.cpp" />
     <ClCompile Include="source\File\StageData.cpp" />
     <ClCompile Include="source\Input\InputManager.cpp" />
+    <ClCompile Include="source\Scene\InGameScene.cpp" />
     <ClCompile Include="source\Scene\ResultScene.cpp" />
+    <ClCompile Include="source\Scene\SceneManager.cpp" />
     <ClCompile Include="source\Scene\StockScene.cpp" />
+    <ClCompile Include="source\Scene\TitleScene.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\Actor\Actor.h" />
@@ -169,6 +173,7 @@
     <ClInclude Include="source\Scene\InGameScene.h" />
     <ClInclude Include="source\Scene\ResultScene.h" />
     <ClInclude Include="source\Scene\SceneBase.h" />
+    <ClInclude Include="source\Scene\SceneManager.h" />
     <ClInclude Include="source\Scene\SceneType.h" />
     <ClInclude Include="source\Scene\Stock.h" />
     <ClInclude Include="source\Scene\TitleScene.h" />

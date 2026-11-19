@@ -340,6 +340,9 @@ void InGameScene::LoadStageData()
         return;
     }
 
+    // LoadStageData() のループより前に描画チップサイズを定義
+    const float draw_chip_size = 768.0f / 14.0f;
+
     //CSVの行を1行ずつ読み込む
     std::string line;
     int y = 0;
@@ -387,13 +390,25 @@ void InGameScene::LoadStageData()
                 }
                 else if (cell == "5")
                 {
-                    //Kuribo* new_enemy=mew Kuribo(pos);
-                    //owned_actors.push_back(new_enemy);
+                    // マスの中心座標を計算してクリボーを生成
+                    Vector2 enemy_pos(
+                        (x + 0.5f) * draw_chip_size,
+                        (y + 0.5f) * draw_chip_size
+                    );
+                    Kuribo* new_enemy = new Kuribo(enemy_pos);
+                    new_enemy->Initialize();
+                    owned_actors.push_back(new_enemy);
                 }
                 else if (cell == "6")
                 {
-                    //Nokonoko* new_enemy= new Nokonoko(pos);
-                    //owned_actors.push_back(new_enemy);
+                    // マスの中心座標を計算してノコノコを生成
+                    Vector2 enemy_pos(
+                        (x + 0.5f) * draw_chip_size,
+                        (y + 0.5f) * draw_chip_size
+                    );
+                    Nokonoko* new_enemy = new Nokonoko(enemy_pos);
+                    new_enemy->Initialize();
+                    owned_actors.push_back(new_enemy);
                 }
 
                 else if (cell == "a")

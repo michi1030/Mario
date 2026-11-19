@@ -42,9 +42,19 @@ void Nokonoko::Initialize()
 	if (walk_animation != nullptr)
 	{
 		image = (*walk_animation)[0];
+
+		int w = 0, h = 0;
+		GetGraphSize(image, &w, &h);
+		if (w > 0)
+		{
+			// 横幅をステージの1マス（draw_chip_size）と同じ大きさに自動調整
+			scale = (768.0f / 14.0f) / static_cast<double>(w);
+
+			// 縦幅(h)から横幅1マス分(w)を引いた半分 × scale だけ上にずらして足元を地面に揃える
+			location.y -= ((h - w) * 0.5f) * static_cast<float>(scale);
+		}
 	}
 }
-
 void Nokonoko::Update(float delta_second)
 {
 	// 状態に応じたスピード設定
@@ -69,10 +79,19 @@ void Nokonoko::Update(float delta_second)
 	velocity.y += D_GRAVITY * delta_second;
 	location.y += velocity.y * delta_second;
 
-	// 仮地面（StageDataとの当たり判定実装までの仮処理）
-	if (location.y >= 300.0f)
+	// Nokonoko::Update() 内の仮地面処理
+	const float draw_chip_size = 768.0f / 14.0f;
+	// 床ブロック（下から2マス＝y=12, 13）の上面のY座標
+	const float floor_top_y = draw_chip_size * 12.0f;
+
+	// ノコノコの画像の半分の高さ分だけ上を中心にする
+	int w = 0, h = 0;
+	GetGraphSize(image, &w, &h);
+	float half_height = (h * 0.5f) * static_cast<float>(scale);
+
+	if (location.y + half_height >= floor_top_y)
 	{
-		location.y = 300.0f;
+		location.y = floor_top_y - half_height;
 		velocity.y = 0.0f;
 	}
 

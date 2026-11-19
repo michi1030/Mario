@@ -31,11 +31,18 @@ void Kuribo::Initialize()
 	radius = 10.0f;
 	direction = FALSE; // 左向き
 
-	// ※実際の画像パス・分割数（横3コマ×縦1コマ：0,1が歩き、2が潰れ）に合わせて変更してください
 	move_animation = new DivSprite("Enemy/kuribo.png", 3, 1);
 	if (move_animation != nullptr)
 	{
 		image = (*move_animation)[0];
+
+		// 画像の横幅を取得して、ステージの1マス（draw_chip_size）と同じ大きさに自動調整
+		int w = 0, h = 0;
+		GetGraphSize(image, &w, &h);
+		if (w > 0)
+		{
+			scale = (768.0f / 14.0f) / static_cast<double>(w);
+		}
 	}
 }
 
@@ -61,9 +68,9 @@ void Kuribo::Update(float delta_second)
 	location.y += velocity.y * delta_second;
 
 	// 仮地面（StageDataとの当たり判定実装までの仮処理）
-	if (location.y >= 300.0f)
+	if (location.y >= 630.8f)
 	{
-		location.y = 300.0f;
+		location.y = 630.8f;
 		velocity.y = 0.0f;
 	}
 

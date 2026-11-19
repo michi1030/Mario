@@ -31,9 +31,14 @@ void Actor::Update(float delta_second)
 
 void Actor::Draw() const
 {
+	Draw(0.0f);
+}
+
+void Actor::Draw(float camera_x) const
+{
 	if (image)
 	{
-		DrawRotaGraphF(location.x, location.y, scale, 0.0, image, TRUE, direction);
+		DrawRotaGraphF(location.x - camera_x, location.y, scale, 0.0, image, TRUE, direction);
 	}
 }
 

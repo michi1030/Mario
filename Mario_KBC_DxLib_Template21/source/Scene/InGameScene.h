@@ -53,6 +53,8 @@ private:
 	int Mt0, Mt1, Mt2, Mt3, Mt4, Mt5;//山画像達
 	int sky;//空画像
 
+	float camera_x;//カメラのX座標（スクロール量）
+
 public:
 	InGameScene();
 	virtual ~InGameScene();

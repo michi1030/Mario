@@ -253,10 +253,14 @@ void Nokonoko::OnHitCollisionEnter(Actor* actor)
 	if (actor == nullptr) return;
 
 	eActorTag tag = actor->GetActorTag();
-	if (tag == eActorTag::eWall)
+	if (tag == eActorTag::eWall || tag == eActorTag::eEnemy)
 	{
-		move_direction *= -1;
-		direction = (move_direction > 0) ? TRUE : FALSE;
+		// 甲羅滑走中（eShellSpin）は反転せず突き進むようにするなら != eShellSpin を条件にする
+		if (state != eNokonokoState::eShellSpin)
+		{
+			move_direction *= -1;
+			direction = (move_direction > 0) ? TRUE : FALSE;
+		}
 	}
 }
 

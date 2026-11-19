@@ -185,8 +185,9 @@ void Kuribo::OnHitCollisionEnter(Actor* actor)
 	if (actor == nullptr || is_crushed) return;
 
 	eActorTag tag = actor->GetActorTag();
-	if (tag == eActorTag::eWall)
+	if (tag == eActorTag::eWall || tag == eActorTag::eEnemy)
 	{
+		// •Ç‚â‘¼‚Ì“G‚É“–‚½‚Á‚½‚ç”½“]
 		move_direction *= -1;
 		direction = (move_direction > 0) ? TRUE : FALSE;
 	}

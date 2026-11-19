@@ -544,9 +544,52 @@ void InGameScene::PlayUpdate(float delta_second)
             player->SetLocation(pos);
         }
     }
+    CheckCollision();
 }
 
 void InGameScene::CheckCollision()
 {
+    const float draw_chip_size = 768.0f / 14.0f;
+    const float hit_dist = draw_chip_size * 0.85f; // 敵同士がぶつかる横幅の距離
 
+    for (size_t i = 0; i < owned_actors.size(); ++i)
+    {
+        Actor* a = owned_actors[i];
+        if (!a || a->GetActorTag() != eActorTag::eEnemy) continue;
+
+        for (size_t j = i + 1; j < owned_actors.size(); ++j)
+        {
+            Actor* b = owned_actors[j];
+            if (!b || b->GetActorTag() != eActorTag::eEnemy) continue;
+
+            Vector2 posA = a->GetLocation();
+            Vector2 posB = b->GetLocation();
+
+            float dx = posB.x - posA.x;
+            float dy = posB.y - posA.y;
+
+            // 横幅・縦幅ともに重なっていたら衝突
+            if (std::abs(dx) < hit_dist && std::abs(dy) < draw_chip_size * 0.8f)
+            {
+                // めり込みを左右に半分ずつ押し戻す（ブルブル振動防止）
+                float overlap = (hit_dist - std::abs(dx)) * 0.5f;
+                if (dx >= 0.0f)
+                {
+                    posA.x -= overlap;
+                    posB.x += overlap;
+                }
+                else
+                {
+                    posA.x += overlap;
+                    posB.x -= overlap;
+                }
+                a->SetLocation(posA);
+                b->SetLocation(posB);
+
+                // お互いの衝突通知を呼んで反転させる
+                a->OnHitCollisionEnter(b);
+                b->OnHitCollisionEnter(a);
+            }
+        }
+    }
 }

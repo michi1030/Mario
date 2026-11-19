@@ -54,6 +54,8 @@ public:
 	virtual void Update(float delta_second);
 	//描画処理
 	virtual void Draw() const;
+	//カメラオフセット付き描画処理
+	virtual void Draw(float camera_x) const;
 	//終了時処理
 	virtual void Finalize();
 

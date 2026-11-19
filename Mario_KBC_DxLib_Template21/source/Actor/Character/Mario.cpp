@@ -32,8 +32,8 @@ void Mario::Initialize()
 	scale = 2.0f;
 	speed = 1.0f;
 	gravity = 1000.0f;
-	walkAcceleration = 1000.0f;
-	dashAcceleration = 1500.0f;
+	walkAcceleration = 100.0f;
+	dashAcceleration = 150.0f;
 	walkMaxSpeed = 150.0f;
 	dashMaxSpeed = 250.0f;
 	friction = 800.0f;
@@ -42,6 +42,8 @@ void Mario::Initialize()
 	jumpheldtime = 0.0f;
 	maxjumpheldtime = 0.2f;
 	radius = 10.0f;
+	collisionWidth = 24.0f;
+	collisionHeight = 32.0f;
 	flag = 0.0f;
 	star_mode = false;
 	image = move_animation[0];
@@ -95,9 +97,11 @@ void Mario::Finalize()
 
 void Mario::OnHitCollisionEnter(Actor* actor)
 {
+	if (actor == nullptr) return;
+
 	eActorTag tag = actor->GetActorTag();
 
-	/*if (tag == eActorTag::eEnemy)
+	if (tag == eActorTag::eEnemy)
 	{
 
 	}
@@ -108,7 +112,7 @@ void Mario::OnHitCollisionEnter(Actor* actor)
 	else if (tag == eActorTag::eWall)
 	{
 
-	}*/
+	}
 }
 
 eActorTag Mario::GetActorTag() const
@@ -276,7 +280,7 @@ void Mario::Fire()
 void Mario::Jump(float delta_second)
 {
 	jumpheldtime += delta_second;
-	if (is_jumptrigger && is_Ground)
+ 	if (is_jumptrigger && is_Ground)
 	{
 		velocity.y = -jump;
 		is_Ground = false;

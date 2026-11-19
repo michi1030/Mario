@@ -20,6 +20,7 @@ InGameScene::InGameScene()
     ,player(nullptr)
     ,enemy(nullptr)
     ,font_handle(NULL)
+    , camera_x(0.0f)
     , floor(-1)
     , hatena(nullptr)
     , block(-1)
@@ -125,17 +126,19 @@ void InGameScene::Draw() const
         for (size_t x = 0; x < bg_data[y].size();++x)
         {
             const std::string& cell = bg_data[y][x];
-            
             if (cell == "0" || cell.empty())
             {
                 continue;
             }
 
-            //背景描画の座標設定
-            int x1 = static_cast<int>(x * draw_chip_size);
+            //背景描画の座標設定（camera_x を引く）
+            int x1 = static_cast<int>(x * draw_chip_size - camera_x);
             int y1 = static_cast<int>(y * draw_chip_size);
-            int x2 = static_cast<int>((x + 1) * draw_chip_size);
+            int x2 = static_cast<int>((x + 1) * draw_chip_size - camera_x);
             int y2 = static_cast<int>((y + 1) * draw_chip_size);
+
+            // 画面外のタイルは描画をスキップ（処理負荷の軽減）
+            if (x2 < 0 || x1 > 1024) continue;
 
             int handle = -1;
 
@@ -213,19 +216,20 @@ void InGameScene::Draw() const
     {
         for (size_t x = 0;x < stage_map[y].size();++x)
         {
-			//ステージデータのパネルIDを取得  
             ePanelID id = stage_map[y][x];
-            //何もなかったらスキップ
             if (id == ePanelID::eNone)
             {
                 continue;
             }
 
-            //ステージ描画の座標設定
-            int x1 = static_cast<int>(x * draw_chip_size);
+            //ステージ描画の座標設定（camera_x を引く）
+            int x1 = static_cast<int>(x * draw_chip_size - camera_x);
             int y1 = static_cast<int>(y * draw_chip_size);
-            int x2 = static_cast<int>((x + 1) * draw_chip_size);
+            int x2 = static_cast<int>((x + 1) * draw_chip_size - camera_x);
             int y2 = static_cast<int>((y + 1) * draw_chip_size);
+
+            // 画面外のタイルは描画をスキップ
+            if (x2 < 0 || x1 > 1024) continue;
 
 
             int Stage_handle = -1;
@@ -293,12 +297,12 @@ void InGameScene::Draw() const
         }
     }
 
-    //キャラクターの描画
-    for (/*auto*/Actor* actor : owned_actors)
+    //キャラクターの描画（camera_x を渡す）
+    for (Actor* actor : owned_actors)
     {
         if (actor)
         {
-            actor->Draw();
+            actor->Draw(camera_x);
         }
     }
 }
@@ -484,8 +488,38 @@ void InGameScene::PlayUpdate(float delta_second)
             actor->Update(delta_second);
         }
     }
-}
 
+    // カメラ追従処理
+    if (player != nullptr)
+    {
+        const float screen_width = 1024.0f;
+        const float center_x = screen_width * 0.5f;
+
+        // マリオが画面中央より右に進んだらカメラを進める（左スクロールはしない本編仕様）
+        if (player->GetLocation().x - camera_x > center_x)
+        {
+            camera_x = player->GetLocation().x - center_x;
+        }
+
+        // ステージ右端のスクロール上限（stage_mapの横幅分まで）
+        const float draw_chip_size = 768.0f / 14.0f;
+        const auto& stage_map = StageData::Get()->GetAll();
+        if (!stage_map.empty() && !stage_map[0].empty())
+        {
+            float max_camera_x = (stage_map[0].size() * draw_chip_size) - screen_width;
+            if (max_camera_x < 0.0f) max_camera_x = 0.0f;
+            if (camera_x > max_camera_x) camera_x = max_camera_x;
+        }
+
+        // マリオがカメラの左端より後ろに戻れないように制限
+        if (player->GetLocation().x < camera_x + 16.0f)
+        {
+            Vector2 pos = player->GetLocation();
+            pos.x = camera_x + 16.0f;
+            player->SetLocation(pos);
+        }
+    }
+}
 void InGameScene::CheckCollision()
 {
 

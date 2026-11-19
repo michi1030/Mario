@@ -23,6 +23,7 @@ private:
 	float walkMaxSpeed;			//歩き最大速度
 	float dashMaxSpeed;			//ダッシュ最大速度
 	float friction;				//慣性
+	float airFriction;			//空中慣性
 	float acceleration;			//加速度
 	float maxSpeed;				//最大速度
 	float jump;					//ジャンプ初速

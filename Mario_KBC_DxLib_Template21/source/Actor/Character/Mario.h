@@ -38,6 +38,9 @@ private:
 	float collisionTop;			//衝突判定上端
 	float collisionBottom;		//衝突判定下端
 
+	float collisionWidth;
+	float collisionHeight;
+
 	float gravity;				//重力加速度
 
 	float flag;

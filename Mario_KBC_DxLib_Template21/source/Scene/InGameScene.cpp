@@ -61,7 +61,7 @@ void InGameScene::Initialize()
     pole = AssetContainer::Get()->GetImages("pole_down.png");
     pole_top = AssetContainer::Get()->GetImages("pole.png");
     flag = AssetContainer::Get()->GetImages("flag.png");
-   // fort = AssetContainer::Get()->GetImages("fort.png");
+    fort = AssetContainer::Get()->GetImages("siro1.png");
 
     hatena = new DivSprite("Block/hatena.png", 4, 1);
 
@@ -217,7 +217,7 @@ void InGameScene::Draw() const
         for (size_t x = 0;x < stage_map[y].size();++x)
         {
             ePanelID id = stage_map[y][x];
-            if (id == ePanelID::eNone)
+            if (id == ePanelID::eNone||id==ePanelID::eFlag)
             {
                 continue;
             }
@@ -227,6 +227,15 @@ void InGameScene::Draw() const
             int y1 = static_cast<int>(y * draw_chip_size);
             int x2 = static_cast<int>((x + 1) * draw_chip_size - camera_x);
             int y2 = static_cast<int>((y + 1) * draw_chip_size);
+
+            //城画像の場合は5*5マス分のサイズに描画領域を広げる
+            if (id == ePanelID::eFort)
+            {
+                int fort_scale = static_cast<int>(StageData::FORT_CHIP_SIZE / StageData::CHIP_SIZE);
+                x2 = static_cast<int>((x + fort_scale) * draw_chip_size - camera_x);
+                y2 = static_cast<int>((y + fort_scale) * draw_chip_size);
+            }
+            
 
             // 画面外のタイルは描画をスキップ
             if (x2 < 0 || x1 > 1024) continue;
@@ -272,13 +281,9 @@ void InGameScene::Draw() const
                 Stage_handle = pole;
                 break;
 
-            case ePanelID::eFlag:
-                Stage_handle = flag;
+            case ePanelID::eFort:
+                Stage_handle = fort;
                 break;
-
-            //case ePanelID::eFort:
-                //Stage_handle = fort;
-                //break;
 
             case ePanelID::ePoleTop:
                 Stage_handle = pole_top;
@@ -294,6 +299,28 @@ void InGameScene::Draw() const
                 DrawExtendGraph(x1, y1, x2, y2, Stage_handle, TRUE);
             }
             
+        }
+    }
+
+    for (size_t y = 0;y < stage_map.size();++y)
+    {
+        for (size_t x = 0;x < stage_map[y].size();++x)
+        {
+            if (stage_map[y][x] == ePanelID::eFlag && flag != -1)
+            {
+                int half_chip = static_cast<int>(draw_chip_size * 0.5f);
+                int x1 = static_cast<int>(x * draw_chip_size - camera_x) + half_chip;
+                int y1 = static_cast<int>(y * draw_chip_size);
+                int x2 = static_cast<int>((x + 1) * draw_chip_size - camera_x) + half_chip;
+                int y2 = static_cast<int>((y + 1) * draw_chip_size);
+
+                if (x2 < 0 || x1>1024)
+                {
+                    continue;
+                }
+
+                DrawExtendGraph(x1, y1, x2, y2, flag, TRUE);
+            }
         }
     }
 
@@ -424,10 +451,10 @@ void InGameScene::LoadStageData()
                 {
                     StageData::Get()->SetPanelData(ePanelID::eFlag, pos, 1, 1);
                 }
-                //else if (cell == "g")
-                //{
-                   // StageData::Get()->SetPanelData(ePanelID::eFort, pos, 1, 1);
-                //}
+                else if (cell == "g")
+                {
+                    StageData::Get()->SetPanelData(ePanelID::eFort, pos, 1, 1);
+                }
             }
             x++;
         }

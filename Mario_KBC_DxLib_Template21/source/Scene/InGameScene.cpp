@@ -367,6 +367,9 @@ void InGameScene::LoadStageData()
         return;
     }
 
+    // LoadStageData() のループより前に描画チップサイズを定義
+    const float draw_chip_size = 768.0f / 14.0f;
+
     //CSVの行を1行ずつ読み込む
     std::string line;
     int y = 0;
@@ -414,12 +417,24 @@ void InGameScene::LoadStageData()
                 }
                 else if (cell == "5")
                 {
-                    Kuribo* new_enemy=new Kuribo(pos);
+                    // マスの中心座標を計算してクリボーを生成
+                    Vector2 enemy_pos(
+                        (x + 0.5f) * draw_chip_size,
+                        (y + 0.5f) * draw_chip_size
+                    );
+                    Kuribo* new_enemy = new Kuribo(enemy_pos);
+                    new_enemy->Initialize();
                     owned_actors.push_back(new_enemy);
                 }
                 else if (cell == "6")
                 {
-                    Nokonoko* new_enemy= new Nokonoko(pos);
+                    // マスの中心座標を計算してノコノコを生成
+                    Vector2 enemy_pos(
+                        (x + 0.5f) * draw_chip_size,
+                        (y + 0.5f) * draw_chip_size
+                    );
+                    Nokonoko* new_enemy = new Nokonoko(enemy_pos);
+                    new_enemy->Initialize();
                     owned_actors.push_back(new_enemy);
                 }
 
@@ -507,11 +522,22 @@ void InGameScene::ChangeGameState(eGameState new_state)
 
 void InGameScene::PlayUpdate(float delta_second)
 {
+    const float screen_width = 1024.0f;
+
     //アクタの更新
     for (auto actor : owned_actors)
     {
         if (actor)
         {
+            // 敵キャラはカメラの右端付近に入るまで待機（マリオが近づく前に穴へ落ちるのを防ぐ）
+            if (actor->GetActorTag() == eActorTag::eEnemy)
+            {
+                if (actor->GetLocation().x > camera_x + screen_width + 64.0f)
+                {
+                    continue;
+                }
+            }
+
             actor->Update(delta_second);
         }
     }
@@ -519,7 +545,6 @@ void InGameScene::PlayUpdate(float delta_second)
     // カメラ追従処理
     if (player != nullptr)
     {
-        const float screen_width = 1024.0f;
         const float center_x = screen_width * 0.5f;
 
         // マリオが画面中央より右に進んだらカメラを進める（左スクロールはしない本編仕様）
@@ -546,8 +571,52 @@ void InGameScene::PlayUpdate(float delta_second)
             player->SetLocation(pos);
         }
     }
+    CheckCollision();
 }
+
 void InGameScene::CheckCollision()
 {
+    const float draw_chip_size = 768.0f / 14.0f;
+    const float hit_dist = draw_chip_size * 0.85f; // 敵同士がぶつかる横幅の距離
 
+    for (size_t i = 0; i < owned_actors.size(); ++i)
+    {
+        Actor* a = owned_actors[i];
+        if (!a || a->GetActorTag() != eActorTag::eEnemy) continue;
+
+        for (size_t j = i + 1; j < owned_actors.size(); ++j)
+        {
+            Actor* b = owned_actors[j];
+            if (!b || b->GetActorTag() != eActorTag::eEnemy) continue;
+
+            Vector2 posA = a->GetLocation();
+            Vector2 posB = b->GetLocation();
+
+            float dx = posB.x - posA.x;
+            float dy = posB.y - posA.y;
+
+            // 横幅・縦幅ともに重なっていたら衝突
+            if (std::abs(dx) < hit_dist && std::abs(dy) < draw_chip_size * 0.8f)
+            {
+                // めり込みを左右に半分ずつ押し戻す（ブルブル振動防止）
+                float overlap = (hit_dist - std::abs(dx)) * 0.5f;
+                if (dx >= 0.0f)
+                {
+                    posA.x -= overlap;
+                    posB.x += overlap;
+                }
+                else
+                {
+                    posA.x += overlap;
+                    posB.x -= overlap;
+                }
+                a->SetLocation(posA);
+                b->SetLocation(posB);
+
+                // お互いの衝突通知を呼んで反転させる
+                a->OnHitCollisionEnter(b);
+                b->OnHitCollisionEnter(a);
+            }
+        }
+    }
 }

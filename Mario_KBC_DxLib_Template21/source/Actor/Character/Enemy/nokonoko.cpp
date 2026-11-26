@@ -1,9 +1,51 @@
-#include "nokonoko.h"
+ï»¿#include "nokonoko.h"
+#include "../../../File/StageData.h" // â€»ç’°å¢ƒã«åˆã‚ã›ã¦ãƒ‘ã‚¹ã‚’èª¿æ•´ã—ã¦ãã ã•ã„
 #include <DxLib.h>
 
 #define D_GRAVITY 1000.0f
-#define D_REVIVAL_TIME 5.0f // b—…‚©‚ç•œŠˆ‚·‚é‚Ü‚Å‚Ì•b”
-#define D_WARNING_TIME 3.0f // ‹r‚ğo‚µn‚ß‚é•b”
+#define D_REVIVAL_TIME 5.0f // ç”²ç¾…ã‹ã‚‰å¾©æ´»ã™ã‚‹ã¾ã§ã®ç§’æ•°
+#define D_WARNING_TIME 3.0f // è„šã‚’å‡ºã—å§‹ã‚ã‚‹ç§’æ•°
+
+static bool IsSolidPanel(ePanelID id)
+{
+	switch (id)
+	{
+	case ePanelID::eWall:
+	case ePanelID::eBranch:
+	case ePanelID::eGate:
+	case ePanelID::eBlock:
+	case ePanelID::eHardBlock:
+	case ePanelID::eHatena:
+	case ePanelID::eDokan_a:
+	case ePanelID::eDokan_b:
+	case ePanelID::eDokan_c:
+	case ePanelID::eDokan_d:
+	case ePanelID::eFort:
+		return true;
+	default:
+		return false;
+	}
+}
+
+static bool CheckStageSolid(float wx, float wy)
+{
+	const float draw_chip_size = 768.0f / 14.0f;
+	int gx = static_cast<int>(wx / draw_chip_size);
+	int gy = static_cast<int>(wy / draw_chip_size);
+
+	if (gy < 0 || gy >= 14 || gx < 0)
+	{
+		return false;
+	}
+
+	const auto& map = StageData::Get()->GetAll();
+	if (gy >= static_cast<int>(map.size()) || gx >= static_cast<int>(map[gy].size()))
+	{
+		return false;
+	}
+
+	return IsSolidPanel(map[gy][gx]);
+}
 
 Nokonoko::Nokonoko()
 	: Character()
@@ -34,7 +76,7 @@ void Nokonoko::Initialize()
 {
 	speed = walk_speed;
 	radius = 10.0f;
-	direction = FALSE; // ¶Œü‚«
+	direction = FALSE; // å·¦å‘ã
 
 	walk_animation = new DivSprite("Enemy/nokonoko.png", 2, 1);
 	shell_animation = new DivSprite("Enemy/nokonoko_revival.png", 2, 1);
@@ -42,12 +84,20 @@ void Nokonoko::Initialize()
 	if (walk_animation != nullptr)
 	{
 		image = (*walk_animation)[0];
+
+		int w = 0, h = 0;
+		GetGraphSize(image, &w, &h);
+		if (w > 0)
+		{
+			scale = (768.0f / 14.0f) / static_cast<double>(w);
+			location.y -= ((h - w) * 0.5f) * static_cast<float>(scale);
+		}
 	}
 }
 
 void Nokonoko::Update(float delta_second)
 {
-	// ó‘Ô‚É‰‚¶‚½ƒXƒs[ƒhİ’è
+	// çŠ¶æ…‹ã«å¿œã˜ãŸã‚¹ãƒ”ãƒ¼ãƒ‰è¨­å®š
 	if (state == eNokonokoState::eWalk)
 	{
 		speed = walk_speed;
@@ -61,22 +111,62 @@ void Nokonoko::Update(float delta_second)
 		speed = 0.0f;
 	}
 
-	// ‰¡ˆÚ“®
+	const float draw_chip_size = 768.0f / 14.0f;
+	int w = 0, h = 0;
+	GetGraphSize(image, &w, &h);
+	float half_w = (w * 0.5f) * static_cast<float>(scale);
+	float half_h = (h * 0.5f) * static_cast<float>(scale);
+
+	// 1. æ¨ªç§»å‹•ã¨å£ãƒ»åœŸç®¡ã®å½“ãŸã‚Šåˆ¤å®š
 	velocity.x = static_cast<float>(move_direction);
 	location.x += velocity.x * speed * delta_second;
 
-	// d—Í‚ÆcˆÚ“®
+	if (speed > 0.0f)
+	{
+		// åºŠãƒ–ãƒ­ãƒƒã‚¯ã«èª¤åå¿œã—ãªã„ã‚ˆã†ã€ä½“ã®ä¸­å¿ƒã€œå°‘ã—ä¸Šã‚ãŸã‚Šã§å£ã‚’ãƒã‚§ãƒƒã‚¯ã™ã‚‹
+		float check_top = location.y - half_h * 0.3f;
+		float check_bottom = location.y + half_h * 0.2f;
+
+		if (move_direction < 0)
+		{
+			float left_edge = location.x - half_w;
+			if (CheckStageSolid(left_edge, check_top) || CheckStageSolid(left_edge, check_bottom))
+			{
+				int gx = static_cast<int>(left_edge / draw_chip_size);
+				location.x = (gx + 1) * draw_chip_size + half_w;
+				move_direction = 1;
+				direction = TRUE;
+			}
+		}
+		else if (move_direction > 0)
+		{
+			float right_edge = location.x + half_w;
+			if (CheckStageSolid(right_edge, check_top) || CheckStageSolid(right_edge, check_bottom))
+			{
+				int gx = static_cast<int>(right_edge / draw_chip_size);
+				location.x = gx * draw_chip_size - half_w;
+				move_direction = -1;
+				direction = FALSE;
+			}
+		}
+	}
+
+	// 2. é‡åŠ›ãƒ»ç¸¦ç§»å‹•ã¨åºŠãƒ»ç©´ã®å½“ãŸã‚Šåˆ¤å®š
 	velocity.y += D_GRAVITY * delta_second;
 	location.y += velocity.y * delta_second;
 
-	// ‰¼’n–ÊiStageData‚Æ‚Ì“–‚½‚è”»’èÀ‘•‚Ü‚Å‚Ì‰¼ˆ—j
-	if (location.y >= 300.0f)
+	float foot_y = location.y + half_h;
+	float foot_left = location.x - half_w * 0.7f;
+	float foot_right = location.x + half_w * 0.7f;
+
+	if (velocity.y >= 0.0f && (CheckStageSolid(foot_left, foot_y) || CheckStageSolid(foot_right, foot_y)))
 	{
-		location.y = 300.0f;
+		int gy = static_cast<int>(foot_y / draw_chip_size);
+		location.y = gy * draw_chip_size - half_h;
 		velocity.y = 0.0f;
 	}
 
-	// ó‘Ô‚²‚Æ‚ÌƒAƒjƒ[ƒVƒ‡ƒ“Eƒ^ƒCƒ}[XV
+	// 3. çŠ¶æ…‹ã”ã¨ã®ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ãƒ»ã‚¿ã‚¤ãƒãƒ¼æ›´æ–°
 	if (state == eNokonokoState::eWalk)
 	{
 		if (walk_animation != nullptr)
@@ -94,7 +184,6 @@ void Nokonoko::Update(float delta_second)
 	{
 		revival_timer += delta_second;
 
-		// ˆê’èŠÔŒo‰ß‚Å•àsó‘Ô‚É•œŠˆ
 		if (revival_timer >= D_REVIVAL_TIME)
 		{
 			state = eNokonokoState::eWalk;
@@ -104,6 +193,11 @@ void Nokonoko::Update(float delta_second)
 			if (walk_animation != nullptr)
 			{
 				image = (*walk_animation)[0];
+				// ç”²ç¾…ã‹ã‚‰æ­©è¡Œã«æˆ»ã£ã¦èƒŒãŒé«˜ããªã‚‹åˆ†ã€åºŠã«ã‚ã‚Šè¾¼ã¾ãªã„ã‚ˆã†ä¸Šã«è£œæ­£
+				int new_w = 0, new_h = 0;
+				GetGraphSize(image, &new_w, &new_h);
+				float new_half_h = (new_h * 0.5f) * static_cast<float>(scale);
+				location.y -= (new_half_h - half_h);
 			}
 			return;
 		}
@@ -112,7 +206,6 @@ void Nokonoko::Update(float delta_second)
 		{
 			if (revival_timer >= D_WARNING_TIME)
 			{
-				// •œŠˆ’¼‘OFb—…(0)‚Æ‹ro‚µ(1)‚ğŒğŒİ‚ÉØ‚è‘Ö‚¦
 				animation_time += delta_second;
 				if (animation_time >= 0.15f)
 				{
@@ -123,14 +216,12 @@ void Nokonoko::Update(float delta_second)
 			}
 			else
 			{
-				// ’Êí‚Ìb—…Ã~
 				image = (*shell_animation)[0];
 			}
 		}
 	}
 	else if (state == eNokonokoState::eShellSpin)
 	{
-		// ‚‘¬ŠŠ‘–’†‚Íb—…(0)ŒÅ’è
 		if (shell_animation != nullptr)
 		{
 			image = (*shell_animation)[0];
@@ -162,10 +253,14 @@ void Nokonoko::OnHitCollisionEnter(Actor* actor)
 	if (actor == nullptr) return;
 
 	eActorTag tag = actor->GetActorTag();
-	if (tag == eActorTag::eWall)
+	if (tag == eActorTag::eWall || tag == eActorTag::eEnemy)
 	{
-		move_direction *= -1;
-		direction = (move_direction > 0) ? TRUE : FALSE;
+		// ç”²ç¾…æ»‘èµ°ä¸­ï¼ˆeShellSpinï¼‰ã¯åè»¢ã›ãšçªãé€²ã‚€ã‚ˆã†ã«ã™ã‚‹ãªã‚‰ != eShellSpin ã‚’æ¡ä»¶ã«ã™ã‚‹
+		if (state != eNokonokoState::eShellSpin)
+		{
+			move_direction *= -1;
+			direction = (move_direction > 0) ? TRUE : FALSE;
+		}
 	}
 }
 
@@ -173,7 +268,6 @@ void Nokonoko::OnStomped(float player_x)
 {
 	if (state == eNokonokoState::eWalk)
 	{
-		// •às ¨ b—…Ã~
 		state = eNokonokoState::eShellStop;
 		revival_timer = 0.0f;
 		animation_num = 0;
@@ -181,7 +275,6 @@ void Nokonoko::OnStomped(float player_x)
 	}
 	else if (state == eNokonokoState::eShellStop)
 	{
-		// b—…Ã~ ¨ ƒ}ƒŠƒI‚ÌˆÊ’u‚Æ‹t•ûŒü‚Ö‚‘¬ŠŠ‘–
 		state = eNokonokoState::eShellSpin;
 		revival_timer = 0.0f;
 		move_direction = (location.x >= player_x) ? 1 : -1;
@@ -189,7 +282,6 @@ void Nokonoko::OnStomped(float player_x)
 	}
 	else if (state == eNokonokoState::eShellSpin)
 	{
-		// ŠŠ‘–’†‚É“¥‚Ü‚ê‚½‚çÄ‚Ñ’â~
 		state = eNokonokoState::eShellStop;
 		revival_timer = 0.0f;
 		animation_num = 0;

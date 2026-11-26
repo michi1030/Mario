@@ -37,10 +37,11 @@ void Mario::Initialize()
 	walkMaxSpeed = 150.0f;
 	dashMaxSpeed = 250.0f;
 	friction = 800.0f;
-	jump = 350.0f;
+	airFriction = 100.0f;
+	jump = 400.0f;
 	jumpBoost = 1500.0f;
 	jumpheldtime = 0.0f;
-	maxjumpheldtime = 0.2f;
+	maxjumpheldtime = 0.3f;
 	radius = 10.0f;
 	collisionWidth = 24.0f;
 	collisionHeight = 32.0f;
@@ -61,13 +62,7 @@ void Mario::Update(float delta_second)
 	velocity.y += gravity * delta_second;
 
 
-	//‰¼’n–Ê
-	if (location.y >= 626.0f)
-	{
-		location.y = 626.0f;
-		velocity.y = 0.0f;
-		is_Ground = true;
-	}
+	
 
 	switch (state)
 	{
@@ -86,6 +81,15 @@ void Mario::Update(float delta_second)
 
 
 	Movement(delta_second);
+
+	//‰¼’n–Ê
+	if (location.y >= 626.0f)
+	{
+		location.y = 626.0f;
+		velocity.y = 0.0f;
+		is_Ground = true;
+	}
+
 	UpdateCollision();
 	MoveAnimation(delta_second);
 }
@@ -161,9 +165,21 @@ void Mario::InputCheck(float delta_second)
 	else
 	{
 		is_animation = false;
+
+		float currentFriction;
+
+		if (is_Ground)
+		{
+			currentFriction = friction;
+		}
+		else
+		{
+			currentFriction = airFriction;
+		}
+
 		if (velocity.x > 0.0f)
 		{
-			velocity.x -= friction * delta_second;
+			velocity.x -= currentFriction * delta_second;
 
 			if (velocity.x < 0.0f)
 			{
@@ -172,7 +188,7 @@ void Mario::InputCheck(float delta_second)
 		}
 		else if (velocity.x < 0.0f)
 		{
-			velocity.x += friction * delta_second;
+			velocity.x += currentFriction * delta_second;
 
 			if (velocity.x > 0.0f)
 			{
@@ -204,19 +220,13 @@ void Mario::InputCheck(float delta_second)
 		}
 	}
 
-	if (InputManager::GetButtonState(XINPUT_BUTTON_A) == eInputState::ePressed || InputManager::GetKeyState(KEY_INPUT_SPACE) == eInputState::ePressed)
-	{
-		is_jumptrigger = true;
-	}
-	if (InputManager::GetButtonState(XINPUT_BUTTON_A) == eInputState::eHeld || InputManager::GetKeyState(KEY_INPUT_SPACE) == eInputState::eHeld)
-	{
-		is_jumpheld = true;
-	}
-	if (InputManager::GetButtonState(XINPUT_BUTTON_A) == eInputState::eReleased || InputManager::GetKeyState(KEY_INPUT_SPACE) == eInputState::eReleased)
-	{
-		is_jumptrigger = false;
-		is_jumpheld = false;
-	}
+	is_jumptrigger =
+		InputManager::GetButtonState(XINPUT_BUTTON_A) == eInputState::ePressed ||
+		InputManager::GetKeyState(KEY_INPUT_SPACE) == eInputState::ePressed;
+
+	is_jumpheld =
+		InputManager::GetButtonState(XINPUT_BUTTON_A) == eInputState::eHeld ||
+		InputManager::GetKeyState(KEY_INPUT_SPACE) == eInputState::eHeld;
 }
 
 void Mario::MoveAnimation(float delta_second)
@@ -279,16 +289,18 @@ void Mario::Fire()
 
 void Mario::Jump(float delta_second)
 {
-	jumpheldtime += delta_second;
  	if (is_jumptrigger && is_Ground)
 	{
 		velocity.y = -jump;
 		is_Ground = false;
 		jumpheldtime = 0.0f;
+
+		is_jumptrigger = false;
 	}
-	if (is_jumpheld && velocity.y < 0.0f && jumpheldtime < maxjumpheldtime)
+	if (is_jumpheld && !is_Ground && velocity.y < 0.0f && jumpheldtime < maxjumpheldtime)
 	{
 		velocity.y -= jumpBoost * delta_second;
+		jumpheldtime += delta_second;
 	}
 }
 
